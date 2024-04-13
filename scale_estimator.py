@@ -119,11 +119,13 @@ error3 = gps2meter(q3.get_latitude(), q3.get_longitude(), estiamte_q3[0], estiam
 error4 = gps2meter(q4.get_latitude(), q4.get_longitude(), estiamte_q4[0], estiamte_q4[1])
 error5 = gps2meter(q5.get_latitude(), q5.get_longitude(), estiamte_q5[0], estiamte_q5[1])
 
-print(error1)
-print(error2)
-print(error3)
-print(error4)
-print(error5)
+print('estimate error')
+print(f'gps: {estiamte_q1}/ Error: {error1}')
+print(f'gps: {estiamte_q2}/ Error: {error2}')
+print(f'gps: {estiamte_q3}/ Error: {error3}')
+print(f'gps: {estiamte_q4}/ Error: {error4}')
+print(f'gps: {estiamte_q5}/ Error: {error5}')
+print('=====================================')
 
 # image retrieval error
 
@@ -133,8 +135,31 @@ error3 = gps2meter(q3.get_latitude(), q3.get_longitude(), d5.get_latitude(), d5.
 error4 = gps2meter(q4.get_latitude(), q4.get_longitude(), d7.get_latitude(), d7.get_longitude())
 error5 = gps2meter(q5.get_latitude(), q5.get_longitude(), d9.get_latitude(), d9.get_longitude())
 
-print(error1)
-print(error2)
-print(error3)
-print(error4)
-print(error5)
+print('retrieval error')
+print(f'gps: {d1.get_latitude(), d1.get_longitude()}/ Error: {error1}')
+print(f'gps: {d3.get_latitude(), d3.get_longitude()}/ Error: {error2}')
+print(f'gps: {d5.get_latitude(), d5.get_longitude()}/ Error: {error3}')
+print(f'gps: {d7.get_latitude(), d7.get_longitude()}/ Error: {error4}')
+print(f'gps: {d9.get_latitude(), d9.get_longitude()}/ Error: {error5}')
+print('=====================================')
+
+# interpolation
+estiamte_q1 = (d1.get_latitude() + d2.get_latitude())/2 , (d1.get_longitude() + d2.get_longitude())/2
+estiamte_q2 = (d3.get_latitude() + d4.get_latitude())/2 , (d3.get_longitude() + d4.get_longitude())/2
+estiamte_q3 = (d5.get_latitude() + d6.get_latitude())/2 , (d5.get_longitude() + d6.get_longitude())/2
+estiamte_q4 = (d7.get_latitude() + d8.get_latitude())/2 , (d7.get_longitude() + d8.get_longitude())/2
+estiamte_q5 = (d9.get_latitude() + d10.get_latitude())/2 , (d9.get_longitude() + d10.get_longitude())/2
+
+error1 = gps2meter(q1.get_latitude(), q1.get_longitude(), estiamte_q1[0], estiamte_q1[1])
+error2 = gps2meter(q2.get_latitude(), q2.get_longitude(), estiamte_q2[0], estiamte_q2[1])
+error3 = gps2meter(q3.get_latitude(), q3.get_longitude(), estiamte_q3[0], estiamte_q3[1])
+error4 = gps2meter(q4.get_latitude(), q4.get_longitude(), estiamte_q4[0], estiamte_q4[1])
+error5 = gps2meter(q5.get_latitude(), q5.get_longitude(), estiamte_q5[0], estiamte_q5[1])
+
+print('interpolation error')
+print(f'gps: {estiamte_q1}/ Error: {error1}')
+print(f'gps: {estiamte_q2}/ Error: {error2}')
+print(f'gps: {estiamte_q3}/ Error: {error3}')
+print(f'gps: {estiamte_q4}/ Error: {error4}')
+print(f'gps: {estiamte_q5}/ Error: {error5}')
+print('=====================================')

@@ -13,6 +13,3 @@
 /patchnetvlad_workspace/1114/002865.png, /patchnetvlad_workspace/1024_1m/001903.png
 /patchnetvlad_workspace/1114/002865.png, /patchnetvlad_workspace/1024_1m/001902.png
 /patchnetvlad_workspace/1114/002865.png, /patchnetvlad_workspace/1024_1m/001904.png
-/patchnetvlad_workspace/1114/003215.png, /patchnetvlad_workspace/1024_1m/002099.png
-/patchnetvlad_workspace/1114/003215.png, /patchnetvlad_workspace/1024_1m/002098.png
-/patchnetvlad_workspace/1114/003215.png, /patchnetvlad_workspace/1024_1m/002081.png

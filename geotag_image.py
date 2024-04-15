@@ -1,7 +1,7 @@
 import cv2
 
 class GeoTagImage:
-    def __init__(self, image_path, gps_path, ratio = 4):
+    def __init__(self, image_path, gps_path):
         self.latitude = 0
         self.longitude = 0
 

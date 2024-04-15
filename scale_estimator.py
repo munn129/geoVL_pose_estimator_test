@@ -4,12 +4,47 @@ import numpy as np
 from math import pi, sin, cos, atan2, sqrt
 
 from geotag_image import GeoTagImage
+from geo_error import GeoError
 
 root_dir = 'patchnetvlad_workspace'
 query_dir = '1114'
 db_dir = '1024_1m'
 query_gps = 'query_gps.txt'
 db_gps = 'db_gps.txt'
+
+# txt 파일을 읽어서, 이미지 리스트를 받아오는 함수 혹은 클래스 필요
+# 혹은 GeoTagImage 클래스를 상속받아서,
+# 텍스트 파일(image retrieval 결과)의 경로만 주면 알아서 하는 클래스
+
+# 일단, 그 기능을 하는 함수
+img_retrieval_result_dir = 'img_retrieval_result.txt'
+_query_name_list = []
+dataset_name_list = []
+with open(img_retrieval_result_dir, 'r') as file:
+    for line in file:
+        line = line.split(', ')
+        # /patch.../.../~~.png -> patch.../.../~~.png
+        _query_name_list.append(line[0][1:])
+        # ~~.png\n -> ~~.png
+        dataset_name_list.append(line[1][1:])
+
+# dataset_name_list 구조상 마지막 문자가 \n이걸로 되어 있어서, 계속 이미지를 못 읽음
+# 와중에 마지막 열은 \n가 안붙어 있음 ㅋㅋ 
+
+query_name_list = []
+for i in _query_name_list:
+    if i not in query_name_list:
+        query_name_list.append(i)
+
+# (query) list<GeoTagImage>
+query_list = []
+for i in query_name_list:
+    query_list.append(GeoTagImage(str(i), query_gps))
+
+# (dataset) list<GeoTagImage>
+dataset_list = []
+for i in dataset_name_list:
+    dataset_list.append(GeoTagImage(str(i), db_gps))
 
 q1 = GeoTagImage(f'{root_dir}/{query_dir}/000002.png', query_gps)
 q2 = GeoTagImage(f'{root_dir}/{query_dir}/001527.png', query_gps)
@@ -126,8 +161,6 @@ print(f'gps: {estiamte_q3}/ Error: {error3}')
 print(f'gps: {estiamte_q4}/ Error: {error4}')
 print(f'gps: {estiamte_q5}/ Error: {error5}')
 print('=====================================')
-
-# image retrieval error
 
 error1 = gps2meter(q1.get_latitude(), q1.get_longitude(), d1.get_latitude(), d1.get_longitude())
 error2 = gps2meter(q2.get_latitude(), q2.get_longitude(), d3.get_latitude(), d3.get_longitude())

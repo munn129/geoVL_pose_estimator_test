@@ -4,6 +4,7 @@ class GeoTagImage:
     def __init__(self, image_path, gps_path):
         self.latitude = 0
         self.longitude = 0
+        self.azimuth = 0
 
         self.image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
         if self.image is None: raise Exception("image is None")
@@ -27,3 +28,6 @@ class GeoTagImage:
     
     def get_longitude(self):
         return self.longitude
+    
+    def get_azimuth(self):
+        return self.azimuth

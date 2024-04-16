@@ -18,6 +18,7 @@ db_gps = 'db_gps.txt'
 
 # 일단, 그 기능을 하는 함수
 img_retrieval_result_dir = 'img_retrieval_result.txt'
+# 일단 result에 있는 대로 읽은 후에, 나중에 중복을 제거하기 위해 _query~~
 _query_name_list = []
 dataset_name_list = []
 with open(img_retrieval_result_dir, 'r') as file:
@@ -31,6 +32,7 @@ with open(img_retrieval_result_dir, 'r') as file:
 # dataset_name_list 구조상 마지막 문자가 \n이걸로 되어 있어서, 계속 이미지를 못 읽음
 # 와중에 마지막 열은 \n가 안붙어 있음 ㅋㅋ 
 
+# query_name_list에서 중복되는 query_name을 지움
 query_name_list = []
 for i in _query_name_list:
     if i not in query_name_list:

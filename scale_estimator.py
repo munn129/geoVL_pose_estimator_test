@@ -96,6 +96,7 @@ def iamge_rt_calculator(query, train) -> tuple:
     return rot, tran
 
 # Rt
+# gps 값만 읽어서, R|t를 계산하기 전에 camera coordinate랑 world coordinate를 calibration 해줘야 함
 q1_d1 = iamge_rt_calculator(q1.get_image(), d1.get_image())
 q1_d2 = iamge_rt_calculator(q1.get_image(), d2.get_image())
 q2_d3 = iamge_rt_calculator(q2.get_image(), d3.get_image())

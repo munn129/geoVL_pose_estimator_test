@@ -12,6 +12,7 @@ class GeoTagImage:
         with open(gps_path, 'r') as file:
             for line in file:
                 line = line.split()
+                # image retrieval 결과에 있는 이미지와 gps list에 있는 이미지의 이름이 같을 때
                 if str(line[0]).split('/')[-1] == str(image_path).split('/')[-1]:
                     self.latitude = float(line[1])
                     self.longitude = float(line[2])

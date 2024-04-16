@@ -23,14 +23,13 @@ _query_name_list = []
 dataset_name_list = []
 with open(img_retrieval_result_dir, 'r') as file:
     for line in file:
+        # 문자열 마지막에 '\n'으로 인해 indexing이 잘 안되는 문제 해결
+        line = line.split('\n')[0]
         line = line.split(', ')
         # /patch.../.../~~.png -> patch.../.../~~.png
         _query_name_list.append(line[0][1:])
         # ~~.png\n -> ~~.png
         dataset_name_list.append(line[1][1:])
-
-# dataset_name_list 구조상 마지막 문자가 \n이걸로 되어 있어서, 계속 이미지를 못 읽음
-# 와중에 마지막 열은 \n가 안붙어 있음 ㅋㅋ 
 
 # query_name_list에서 중복되는 query_name을 지움
 query_name_list = []

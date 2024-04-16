@@ -12,7 +12,7 @@ class GeoTagImage:
         with open(gps_path, 'r') as file:
             for line in file:
                 line = line.split()
-                if line[0][-10:] == image_path[-10:]:
+                if str(line[0]).split('/')[-1] == str(image_path).split('/')[-1]:
                     self.latitude = float(line[1])
                     self.longitude = float(line[2])
                     break

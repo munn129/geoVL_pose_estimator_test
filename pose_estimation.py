@@ -4,8 +4,11 @@
 # GeoTagImage에서 이미지 -> Rt, azimuth -> calibration
 # 여기서 pose estimation 결과로 얻은 최종적인 추정 gps 값도 가져야 할듯
 
+# 이 클래스에서 쿼리 이미지를 기준으로 retrieved image"들"의 정보를 같이 갖고 있는게 맞을까?
+
 import cv2
 import numpy as np
+from math import cos, sin, pi
 
 from geotag_image import GeoTagImage
 
@@ -16,9 +19,29 @@ class PoseEstimation:
         self.retrieved_image = retrieved.get_image()
         self.dataset_image = dataset.get_image()
         self.dataset_azimuth = dataset.get_azimuth()
+        self.mat = np.zeros((3,3))
 
     def camera_to_world_calib(self):
-        pass
+        # azimuth source: novatel inspva azimuth, CW(left-handed)
+        roll = 0
+        pitch = 0
+        # deg to rad
+        yaw = pi / 180 * self.dataset_azimuth
+        # camera: XYZ -> ZX(-Y)
+        mat = np.array([0,1,0,
+                        0,0,-1,
+                        1,0,0]).reshape(3,3)
+        R_x = np.array([1,0,0,
+                        0,cos(roll),-sin(roll),
+                        0,sin(roll),cos(roll)]).reshape(3,3)
+        R_y = np.array([cos(pitch),0,sin(pitch),
+                        0,1,0,
+                        -sin(pitch),0,cos(pitch)]).reshape(3,3)
+        R_z = np.array([cos(yaw),-sin(yaw),0,
+                        sin(yaw),cos(yaw),0,
+                        0,0,1]).reshape(3,3)
+        
+        self.mat =  mat @ R_x @ R_y @ R_z
 
     def rt_calculator(self):
         sift = cv2.SIFT_create()

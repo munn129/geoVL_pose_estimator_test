@@ -17,8 +17,10 @@ class GeoTagImage:
                 if str(line[0]).split('/')[-1] == str(image_path).split('/')[-1]:
                     self.latitude = float(line[1])
                     self.longitude = float(line[2])
+                    self.azimuth = float(line[3])
                     break
-        if self.latitude == 0 or self.longitude == 0: raise Exception("gps is zero")
+        if self.latitude == 0 or self.longitude == 0 or self.azimuth == 0:
+            raise Exception("Wrong GPS or azimuth value")
 
     def get_image(self):
         return self.image

@@ -5,6 +5,7 @@
 # 여기서 pose estimation 결과로 얻은 최종적인 추정 gps 값도 가져야 할듯
 
 # 이 클래스에서 쿼리 이미지를 기준으로 retrieved image"들"의 정보를 같이 갖고 있는게 맞을까?
+# 그렇다면, 어떻게 해야할까...
 
 import cv2
 import numpy as np
@@ -14,12 +15,13 @@ from geotag_image import GeoTagImage
 
 class PoseEstimation:
     def __init__(self, retrieved, dataset):
-        if not (isinstance(retrieved, GeoTagImage) and isinstance(dataset, GeoTagImage)):
+        if not all(isinstance(obj, GeoTagImage) for obj in [retrieved, dataset]):
             raise Exception('Argments(retrieved, dataset) are not GeoTagImage instance')
         self.retrieved_image = retrieved.get_image()
         self.dataset_image = dataset.get_image()
         self.dataset_azimuth = dataset.get_azimuth()
         self.mat = np.zeros((3,3))
+        self.translation = 0
 
     def camera_to_world_calib(self):
         # azimuth source: novatel inspva azimuth, CW(left-handed)
@@ -71,8 +73,10 @@ class PoseEstimation:
         E, mask = cv2.findEssentialMat(query_points, train_points)
         retval, rot, tran, mask = cv2.recoverPose(E, query_points, train_points)
         
-        return rot, tran
-    
-    # todo
-    # to_homogeneous()
-    # recoveryPose에서 rotation이 어떤 축 순서 기준인지 확인해야 할듯. XYZ인지 뭔지
+        self.translation = tran
+
+    def get_translation(self):
+        self.camera_to_world_calib()
+        self.rt_calculator()
+
+        return self.mat @ self.translation

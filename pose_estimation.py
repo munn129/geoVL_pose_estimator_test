@@ -6,12 +6,15 @@
 
 # 이 클래스에서 쿼리 이미지를 기준으로 retrieved image"들"의 정보를 같이 갖고 있는게 맞을까?
 # 그렇다면, 어떻게 해야할까...
+# 정보를 갖고 있는건 아닌듯, 데이터와 기능을 분리시켜야 함. -> iamge retrieved class
+# 그리고 이 클래스에서는 ImageRetrieved 클래스 입력을 받아야 함
 
 import cv2
 import numpy as np
 from math import cos, sin, pi
 
 from geotag_image import GeoTagImage
+from image_retrieved import ImageRetrieved
 
 class PoseEstimation:
     def __init__(self, retrieved, dataset):
@@ -22,6 +25,14 @@ class PoseEstimation:
         self.dataset_azimuth = dataset.get_azimuth()
         self.mat = np.zeros((3,3))
         self.translation = 0
+
+    def __init(self, image_retrieved_instance):
+        if not isinstance(image_retrieved_instance, ImageRetrieved):
+            raise Exception('Input argumnet must be ImageRetrieved instance.')
+        
+        self.image_retrieved_instance = image_retrieved_instance
+        self.query_geotagimage = image_retrieved_instance.get_query()
+        self.dataset_geotagimages = image_retrieved_instance.get_retrieved_images()
 
     def camera_to_world_calib(self):
         # azimuth source: novatel inspva azimuth, CW(left-handed)

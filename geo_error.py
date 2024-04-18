@@ -16,6 +16,13 @@ class GeoError:
         self.error_list = []
 
     def _gps_to_meter(self, gps_1, gps_2) -> float:
+        '''
+        args
+        - gps_1: tuple(latitude, longitude)
+        - gps_2: tuple(latitude, longitude)
+        return
+        - distance of between gps_1 and gps_2 [m]
+        '''
         lat1, lon1 = gps_1
         lat2, lon2 = gps_2
 

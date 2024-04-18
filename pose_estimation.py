@@ -6,6 +6,8 @@
 # rt_calulator() -> 4*4 homogeneous matrix
 # to_homogeneous() -> 4*4 homogeneous matrix
 # 캘리브레이션 행렬도 4*4로 만들어서 나중에 캘리브레이션 할 수 있게 해야할 듯
+# calibration matrix, rt, scale, gps 값을 입력으로 받아서
+# estimation 하는 함수를 만들어야 할듯
 
 import numpy as np
 import cv2
@@ -84,3 +86,6 @@ class PoseEstimation:
         rt_matrix[3,3] = 1
 
         return rt_matrix
+    
+    def gps_estimation(self, calibration_matrix, rt_matrix, scale, gps):
+        pass

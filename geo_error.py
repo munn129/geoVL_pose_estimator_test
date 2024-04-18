@@ -7,7 +7,8 @@ class GeoError:
         self.gps_1_list = gps_1_list
         self.gps_2_list = gps_2_list
         if len(self.gps_1_list) != len(self.gps_2_list):
-            raise Exception("The length of the input arguments(list) are different.")
+            raise Exception(f"The length of the input arguments(list) are different. \n \
+                            gps_1_list: {len(self.gps_1_list)}, gps_2_list: {len(self.gps_2_list)}")
         
         # opt: What kind of gps(e.g., result of GPS, result of image retrieval, ...)
         self.opt1 = opt1
@@ -48,8 +49,12 @@ class GeoError:
             print(f'Error between {self.opt1} and {self.opt2}')
 
         for gps_1, gps_2, error in zip(self.gps_1_list, self.gps_2_list, self.error_list):
-            print(gps_1)
-            print(gps_2)
+            print(f'gps 1: {gps_1}')
+            print(f'gps 2: {gps_2}')
             print(f'error: {error}[m]')
         
         print('================================================')
+
+        # TODO 
+        # Error의 평균 계산 후 출력
+        # histogram도 있어야 할 듯?

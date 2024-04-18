@@ -57,18 +57,18 @@ class PoseEstimation:
 
         return calibration_matrix
 
-    def rt_calculator(self, retrieved_image, dataset_image):
+    def rt_calculator(self, query_image, retrieved_image):
         '''
         input
+        query_image: np.array
         retrieved_image: np.array
-        dataset_image: np.array
         output
         rt_matrix: 4*4 homogeneous np.array
         '''
         sift = cv2.SIFT_create()
 
-        query_kp, query_des = sift.detectAndCompute(retrieved_image, None)
-        train_kp, train_des = sift.detectAndCompute(dataset_image, None)
+        query_kp, query_des = sift.detectAndCompute(query_image, None)
+        train_kp, train_des = sift.detectAndCompute(retrieved_image, None)
 
         FLANN_INDEX_KDTREE = 1
         index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
@@ -95,7 +95,7 @@ class PoseEstimation:
         rt_matrix = np.eye(4)
 
         rt_matrix[:3, :3] = rot
-        rt_matrix[:3, 3] = tran
+        rt_matrix[:3, 3] = tran.T
         rt_matrix[3,3] = 1
 
         return rt_matrix

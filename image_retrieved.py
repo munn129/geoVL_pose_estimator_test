@@ -4,7 +4,7 @@ from geotag_image import GeoTagImage
 
 class ImageRetrieved:
     def __init__(self, query, retrieved_list):
-        if not all(isinstance(obj, GeoTagImage) for obj in retrieved_list.append(query)):
+        if not(isinstance(query, GeoTagImage) and isinstance(retrieved_list[0], GeoTagImage)):
             raise Exception("All arguments must be GeoTagImage instance")
         
         self.query = query

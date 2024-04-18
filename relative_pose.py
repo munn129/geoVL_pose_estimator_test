@@ -13,11 +13,6 @@
 # R|t 정보와 estimation된 값을 저장하는 편이 옳을 듯.
 # R|t를 계산하는건 다른 클래스ㄱㄱ 그럼 얘 이름을 뭘로하지...
 
-import cv2
-import numpy as np
-from math import cos, sin, pi
-
-from geotag_image import GeoTagImage
 from image_retrieved import ImageRetrieved
 from pose_estimation import PoseEstimation
 
@@ -28,16 +23,37 @@ class RelativePose:
         
         self.pose_estimation = PoseEstimation()
 
-        # 여기서는 rt 값만 저장하면 되니까. 이미지를 저장하고 있을 이유가 없음
-        self.query_geotagimage = image_retrieved_instance.get_query()
-        # dataset_geotagimages -> list
-        self.dataset_geotagimages = image_retrieved_instance.get_retrieved_images()
-        self.query_latitude = self.query_geotagimage.get_latitude()
-        self.query_longitude = self.query_geotagimage.get_longitude()
-        
-        
-    def get_translation(self):
-        self.camera_to_world_calib()
-        self.rt_calculator()
+        self.query = image_retrieved_instance.get_query()
+        self.camera_to_world_list = []
+        self.rt_list = []
+        self.gt_scale_list = []
+        self.retrieved_gps_list = []
+        for retrieved in image_retrieved_instance.get_retrieved_images():
+            retrieved_latitude = retrieved.get_latitude()
+            retrieved_longitude = retrieved.get_longitude()
+            self.camera_to_world_list.append(self.pose_estimation.camera_to_world_calibration(retrieved.get_azimuth()))
+            self.rt_list.append(self.pose_estimation.rt_calculator(self.query.get_image(),
+                                                                   retrieved.get_image()))
+            self.gt_scale_list.append(self.pose_estimation.gt_scale_calculator(self.query.get_latitude(),
+                                                                          self.query.get_longitude(),
+                                                                          retrieved_latitude,
+                                                                          retrieved_longitude))
+            self.retrieved_gps_list.append((retrieved_latitude, retrieved_longitude))
 
-        return self.mat @ self.translation.T
+        if not self.camera_to_world_list or not self.rt_list or not self.gt_scale_list:
+            raise Exception('some work is failed')
+        
+        if not len(self.camera_to_world_list) == len(self.rt_list):
+            raise Exception('calibration list and rt list have different length')
+    
+        self.estimated_gps = []
+        # for calib, rt, gps in zip(self.camera_to_world_list, self.rt_list, self.retrieved_gps_list):
+        for i in range(len(self.retrieved_gps_list)):
+            self.estimated_gps.append(self.pose_estimation.gps_estimation(self.camera_to_world_list[i],
+                                                                          self.rt_list[i],
+                                                                          self.retrieved_gps_list[i][0],
+                                                                          self.retrieved_gps_list[i][1],
+                                                                          self.gt_scale_list[i]))
+
+    def get_estimated_gps(self):
+        return self.estimated_gps[0]

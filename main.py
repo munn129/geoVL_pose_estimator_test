@@ -1,8 +1,3 @@
-import cv2
-import numpy as np
-
-from math import pi, sin, cos, atan2, sqrt
-
 from geotag_image import GeoTagImage
 from geo_error import GeoError
 from image_retrieved import ImageRetrieved

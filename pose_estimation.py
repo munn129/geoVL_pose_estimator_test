@@ -11,7 +11,7 @@
 
 import numpy as np
 import cv2
-from math import cos, sin, pi
+from math import cos, sin, pi, sqrt
 
 class PoseEstimation:
     def __init__(self):
@@ -21,6 +21,12 @@ class PoseEstimation:
         pass
 
     def camera_to_world_calibration(self, azimuth):
+        '''
+        input
+        azimuth: degree(float)
+        ouput
+        calibration_matrix(4*4 honogeneous np.array)
+        '''
         # azimuth source: novatel inspva azimuth, CW(left-handed)
         # azimuth -> retrieved image(dataset)
         roll = 0
@@ -52,6 +58,13 @@ class PoseEstimation:
         return calibration_matrix
 
     def rt_calculator(self, retrieved_image, dataset_image):
+        '''
+        input
+        retrieved_image: np.array
+        dataset_image: np.array
+        output
+        rt_matrix: 4*4 homogeneous np.array
+        '''
         sift = cv2.SIFT_create()
 
         query_kp, query_des = sift.detectAndCompute(retrieved_image, None)
@@ -87,5 +100,25 @@ class PoseEstimation:
 
         return rt_matrix
     
-    def gps_estimation(self, calibration_matrix, rt_matrix, scale, gps):
-        pass
+    def gps_estimation(self, calibration_matrix, rt_matrix, latitude, longitude, scale = 1):
+        '''
+        input
+        calibration_matrix: 4*4 homogeneous np.array
+        rt_matix: 4*4 homogeneous np.array
+        scale: int
+        latitude: float
+        longiture: float
+        ouput
+        gps: tuple(latitude, longitude)
+        '''
+        H = calibration_matrix @ rt_matrix
+        return (scale * H[0,3] + latitude, scale * H[1,3] + longitude)
+
+    def gt_scale_calculator(self, query_latitude, query_longitude, train_lattitude, train_longitude):
+        '''
+        input
+        all float
+        output
+        scale: float
+        '''
+        return sqrt((query_latitude - train_lattitude)**2 + (query_longitude - train_longitude)**2)

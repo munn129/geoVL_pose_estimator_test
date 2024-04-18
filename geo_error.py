@@ -48,11 +48,16 @@ class GeoError:
         if self.opt1 != '' and self.opt2 != '':
             print(f'Error between {self.opt1} and {self.opt2}')
 
+        error_sum = 0
+        cnt = 0
         for gps_1, gps_2, error in zip(self.gps_1_list, self.gps_2_list, self.error_list):
             print(f'gps 1: {gps_1}')
             print(f'gps 2: {gps_2}')
             print(f'error: {error}[m]')
+            error_sum += float(error)
+            cnt += 1
         
+        print(f'average of error {error_sum/cnt}')
         print('================================================')
 
         # TODO 

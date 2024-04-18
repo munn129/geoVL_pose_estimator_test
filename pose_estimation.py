@@ -1,45 +1,34 @@
-# image 2 image의 Rt 계산
-# camera coordinate to world coordinate calibration
-# input : GeoTagImage 
-# GeoTagImage에서 이미지 -> Rt, azimuth -> calibration
-# 여기서 pose estimation 결과로 얻은 최종적인 추정 gps 값도 가져야 할듯
+# 카메라 좌표계와 gps 좌표계 사이의 캘리브레이션
+# 두 이미지 사이의 R|t
+# 값을 저장하는 클래스가 아님. 값을 계산하는 클래스임
 
-# 이 클래스에서 쿼리 이미지를 기준으로 retrieved image"들"의 정보를 같이 갖고 있는게 맞을까?
-# 그렇다면, 어떻게 해야할까...
-# 정보를 갖고 있는건 아닌듯, 데이터와 기능을 분리시켜야 함. -> iamge retrieved class
-# 그리고 이 클래스에서는 ImageRetrieved 클래스 입력을 받아야 함
+# camera_to_world_calibration() -> 3*3 rotation matrix
+# rt_calulator() -> 4*4 homogeneous matrix
+# to_homogeneous() -> 4*4 homogeneous matrix
+# 캘리브레이션 행렬도 4*4로 만들어서 나중에 캘리브레이션 할 수 있게 해야할 듯
 
-import cv2
 import numpy as np
+import cv2
 from math import cos, sin, pi
 
-from geotag_image import GeoTagImage
-from image_retrieved import ImageRetrieved
-
 class PoseEstimation:
-    def __init__(self, retrieved, dataset):
-        if not all(isinstance(obj, GeoTagImage) for obj in [retrieved, dataset]):
-            raise Exception('Argments(retrieved, dataset) are not GeoTagImage instance')
-        self.retrieved_image = retrieved.get_image()
-        self.dataset_image = dataset.get_image()
-        self.dataset_azimuth = dataset.get_azimuth()
-        self.mat = np.zeros((3,3))
-        self.translation = 0
+    def __init__(self):
+        pass
 
-    def __init(self, image_retrieved_instance):
-        if not isinstance(image_retrieved_instance, ImageRetrieved):
-            raise Exception('Input argumnet must be ImageRetrieved instance.')
-        
-        self.image_retrieved_instance = image_retrieved_instance
-        self.query_geotagimage = image_retrieved_instance.get_query()
-        self.dataset_geotagimages = image_retrieved_instance.get_retrieved_images()
+    def to_homogeneous(self):
+        pass
 
-    def camera_to_world_calib(self):
+    def camera_to_world_calibration(self, azimuth):
         # azimuth source: novatel inspva azimuth, CW(left-handed)
+        # azimuth -> retrieved image(dataset)
         roll = 0
         pitch = 0
         # deg to rad
-        yaw = pi / 180 * self.dataset_azimuth
+        yaw = pi / 180 * azimuth
+        # translation vector
+        translation_vector = [0, 0, 0, 1]
+        # calibration matrix(homogeneous, 4*4)
+        calibration_matrix = np.eye(4)
         # camera: XYZ -> ZX(-Y)
         mat = np.array([0,1,0,
                         0,0,-1,
@@ -54,13 +43,17 @@ class PoseEstimation:
                         sin(yaw),cos(yaw),0,
                         0,0,1]).reshape(3,3)
         
-        self.mat =  mat @ R_x @ R_y @ R_z
+        # to homogeneous
+        calibration_matrix[:3,:3] = mat @ R_x @ R_y @ R_z
+        calibration_matrix[:,3] = translation_vector
 
-    def rt_calculator(self):
+        return calibration_matrix
+
+    def rt_calculator(self, retrieved_image, dataset_image):
         sift = cv2.SIFT_create()
 
-        query_kp, query_des = sift.detectAndCompute(self.retrieved_image, None)
-        train_kp, train_des = sift.detectAndCompute(self.dataset_image, None)
+        query_kp, query_des = sift.detectAndCompute(retrieved_image, None)
+        train_kp, train_des = sift.detectAndCompute(dataset_image, None)
 
         FLANN_INDEX_KDTREE = 1
         index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
@@ -84,10 +77,10 @@ class PoseEstimation:
         E, mask = cv2.findEssentialMat(query_points, train_points)
         retval, rot, tran, mask = cv2.recoverPose(E, query_points, train_points)
         
-        self.translation = tran
+        rt_matrix = np.eye(4)
 
-    def get_translation(self):
-        self.camera_to_world_calib()
-        self.rt_calculator()
+        rt_matrix[:3, :3] = rot
+        rt_matrix[:3, 3] = tran
+        rt_matrix[3,3] = 1
 
-        return self.mat @ self.translation
+        return rt_matrix

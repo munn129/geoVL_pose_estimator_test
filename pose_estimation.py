@@ -108,7 +108,7 @@ class PoseEstimation:
         H = calibration_matrix @ rt_matrix
         return (scale * H[0,3] + latitude, scale * H[1,3] + longitude)
 
-    def gt_scale_calculator(self, query_latitude, query_longitude, train_lattitude, train_longitude):
+    def scale_calculator(self, query_latitude, query_longitude, train_lattitude, train_longitude):
         '''
         input
         all float
@@ -116,3 +116,5 @@ class PoseEstimation:
         scale: float
         '''
         return sqrt((query_latitude - train_lattitude)**2 + (query_longitude - train_longitude)**2)
+    
+    

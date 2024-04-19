@@ -9,6 +9,7 @@ db_dir = '1024_1m'
 query_gps = 'query_gps.txt'
 db_gps = 'db_gps.txt'
 retrieval_num = 2
+scale = 10
 
 # 일단, 그 기능을 하는 함수
 img_retrieval_result_dir = 'img_retrieval_result.txt'
@@ -34,12 +35,12 @@ for i in _query_name_list:
 # (query) list<GeoTagImage>
 query_list = []
 for i in query_name_list:
-    query_list.append(GeoTagImage(str(i), query_gps))
+    query_list.append(GeoTagImage(str(i), query_gps, scale))
 
 # (dataset) list<GeoTagImage>
 dataset_list = []
 for i in dataset_name_list:
-    dataset_list.append(GeoTagImage(str(i), db_gps))
+    dataset_list.append(GeoTagImage(str(i), db_gps, scale))
 
 # 쿼리 이미지와 image retrieval 결과를 저장
 # 쿼리 이미지 - [retrieved images, ...] 로 구성되어 있음

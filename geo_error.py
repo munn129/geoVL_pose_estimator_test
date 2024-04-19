@@ -6,6 +6,7 @@ gt 값(list)과 estimation 값(list)을 입력받아,
 
 # TODO
 # histogram
+# scale에 따른 평가도 필요하려나
 
 from math import pi, sin, cos, sqrt, atan2
 

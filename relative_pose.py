@@ -43,6 +43,8 @@ class RelativePose:
         if not len(self.camera_to_world_list) == len(self.rt_list):
             raise Exception('calibration list and rt list have different length')
     
+        # proposal
+        # 이후 변수들은 제안하는 방법을 위한 변수들임
         self.distance_retrieved_images = 0
         retrieved_list = retrieved_image_instance.get_retrieved_image_list()
         if len(retrieved_list) == 2:
@@ -51,6 +53,10 @@ class RelativePose:
                                                                                    retrieved_list[1].get_latitude(),
                                                                                    retrieved_list[1].get_longitude())
     
+        self.alpha = 0
+        self.beta = 0
+        self.gamma = 0
+
     def direct_estimate(self):
         # 이 배열의 길이는 retrieval image의 수
         # 나의 경우 쿼리 이미지 한 장에 retrieved image 2장을 골랐기 때문에 길이는 2

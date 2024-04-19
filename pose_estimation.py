@@ -5,7 +5,7 @@
 
 import numpy as np
 import cv2
-from math import cos, sin, pi, sqrt
+from math import cos, sin, pi, sqrt, asin
 
 class PoseEstimation:
     def __init__(self):
@@ -118,5 +118,8 @@ class PoseEstimation:
         return sqrt((query_latitude - train_lattitude)**2 + (query_longitude - train_longitude)**2)
     
     def compute_angle_between_vectors(self, homogeneous_1, homogeneous_2):
+        # vec_1, vec_2: 2 * 1 vector
         vec_1 = homogeneous_1[:2,3]
         vec_2 = homogeneous_2[:2,3]
+        cross_product = np.cross_product(vec_1.T, vec_2.T)
+

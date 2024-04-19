@@ -1,23 +1,14 @@
-# image 2 image의 Rt 계산
-# camera coordinate to world coordinate calibration
-# input : GeoTagImage 
-# GeoTagImage에서 이미지 -> Rt, azimuth -> calibration
-# 여기서 pose estimation 결과로 얻은 최종적인 추정 gps 값도 가져야 할듯
-
-# 이 클래스에서 쿼리 이미지를 기준으로 retrieved image"들"의 정보를 같이 갖고 있는게 맞을까?
-# 그렇다면, 어떻게 해야할까...
-# 정보를 갖고 있는건 아닌듯, 데이터와 기능을 분리시켜야 함. -> iamge retrieved class
-# 그리고 이 클래스에서는 ImageRetrieved 클래스 입력을 받아야 함
-
-# 이 클래스에서는 image retrieved instance를 받고, 쿼리 이미지와 비교했을 때
-# R|t 정보와 estimation된 값을 저장하는 편이 옳을 듯.
-# R|t를 계산하는건 다른 클래스ㄱㄱ 그럼 얘 이름을 뭘로하지...
+'''
+ImageRetrieved instance에 있는 쿼리 이미지와 retrieved 이미지 사이의
+rt, scale 등을 저장하는 클래스
+아직 고쳐야 할 부분이 많다...
+'''
 
 from image_retrieved import ImageRetrieved
 from pose_estimation import PoseEstimation
 
 class RelativePose:
-    def __init__(self, image_retrieved_instance):
+    def __init__(self, image_retrieved_instance: ImageRetrieved):
         if not isinstance(image_retrieved_instance, ImageRetrieved):
             raise Exception('Input argumnet must be ImageRetrieved instance.')
         
@@ -28,6 +19,7 @@ class RelativePose:
         self.rt_list = []
         self.gt_scale_list = []
         self.retrieved_gps_list = []
+        # 가능하면 이 부분을 좀 분리하고 싶긴 함
         for retrieved in image_retrieved_instance.get_retrieved_images():
             retrieved_latitude = retrieved.get_latitude()
             retrieved_longitude = retrieved.get_longitude()

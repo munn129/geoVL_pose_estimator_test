@@ -1,9 +1,16 @@
+'''
+gt 값(list)과 estimation 값(list)을 입력받아,
+각 요소별 오차(gps와 gps 사이 거리)를 계산하고, 저장하는 클래스
+아직 수정해야 할 사항이 많음
+'''
+
+# TODO
+# histogram
+
 from math import pi, sin, cos, sqrt, atan2
 
-# Todo
-# 생각해보니, 여기서  GeoTagImage class를 입력 받아야 함
 class GeoError:
-    def __init__(self, gps_1_list, gps_2_list, opt1 = '', opt2 = ''):
+    def __init__(self, gps_1_list: list, gps_2_list: list, opt1 = '', opt2 = ''):
         self.gps_1_list = gps_1_list
         self.gps_2_list = gps_2_list
         if len(self.gps_1_list) != len(self.gps_2_list):
@@ -16,7 +23,7 @@ class GeoError:
 
         self.error_list = []
 
-    def _gps_to_meter(self, gps_1, gps_2) -> float:
+    def _gps_to_meter(self, gps_1: tuple, gps_2: tuple) -> float:
         '''
         input
         - gps_1: tuple(latitude, longitude)
@@ -59,7 +66,3 @@ class GeoError:
         
         print(f'average of error {error_sum/cnt}')
         print('================================================')
-
-        # TODO 
-        # Error의 평균 계산 후 출력
-        # histogram도 있어야 할 듯?

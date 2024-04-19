@@ -6,7 +6,7 @@ Image는 경로만 저장하며, get_image() 호출 시 이미지를 읽는다.
 import cv2
 
 class GeoTagImage:
-    def __init__(self, image_path, gps_path):
+    def __init__(self, image_path: str, gps_path: str):
         self.latitude = 0
         self.longitude = 0
         self.azimuth = 0

@@ -1,13 +1,7 @@
-# 카메라 좌표계와 gps 좌표계 사이의 캘리브레이션
-# 두 이미지 사이의 R|t
-# 값을 저장하는 클래스가 아님. 값을 계산하는 클래스임
-
-# camera_to_world_calibration() -> 3*3 rotation matrix
-# rt_calulator() -> 4*4 homogeneous matrix
-# to_homogeneous() -> 4*4 homogeneous matrix
-# 캘리브레이션 행렬도 4*4로 만들어서 나중에 캘리브레이션 할 수 있게 해야할 듯
-# calibration matrix, rt, scale, gps 값을 입력으로 받아서
-# estimation 하는 함수를 만들어야 할듯
+'''
+두 개의 이미지 사이의 rt, scale, calibration을 수행하는 클래스
+"저장하는 데이터는 없다"
+'''
 
 import numpy as np
 import cv2
@@ -20,7 +14,7 @@ class PoseEstimation:
     def to_homogeneous(self):
         pass
 
-    def camera_to_world_calibration(self, azimuth):
+    def camera_to_world_calibration(self, azimuth: float):
         '''
         input
         azimuth: degree(float)

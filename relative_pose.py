@@ -4,23 +4,23 @@ rt, scale 등을 저장하는 클래스
 아직 고쳐야 할 부분이 많다...
 '''
 
-from image_retrieved import ImageRetrieved
+from retrieved_image import RetrievedImage
 from pose_estimation import PoseEstimation
 
 class RelativePose:
-    def __init__(self, image_retrieved_instance: ImageRetrieved):
-        if not isinstance(image_retrieved_instance, ImageRetrieved):
-            raise Exception('Input argumnet must be ImageRetrieved instance.')
+    def __init__(self, retrieved_image_instance: RetrievedImage):
+        if not isinstance(retrieved_image_instance, RetrievedImage):
+            raise Exception('Input argumnet must be RetrievedImage instance.')
         
         self.pose_estimation = PoseEstimation()
 
-        self.query = image_retrieved_instance.get_query()
+        self.query = retrieved_image_instance.get_query()
         self.camera_to_world_list = []
         self.rt_list = []
         self.gt_scale_list = []
         self.retrieved_gps_list = []
         # 가능하면 이 부분을 좀 분리하고 싶긴 함
-        for retrieved in image_retrieved_instance.get_retrieved_images():
+        for retrieved in retrieved_image_instance.get_retrieved_image_list():
             retrieved_latitude = retrieved.get_latitude()
             retrieved_longitude = retrieved.get_longitude()
             self.camera_to_world_list.append(self.pose_estimation.camera_to_world_calibration(retrieved.get_azimuth()))
@@ -43,8 +43,8 @@ class RelativePose:
         for i in range(len(self.retrieved_gps_list)):
             self.estimated_gps.append(self.pose_estimation.gps_estimation(self.camera_to_world_list[i],
                                                                           self.rt_list[i],
-                                                                          self.retrieved_gps_list[i][0],
-                                                                          self.retrieved_gps_list[i][1],
+                                                                          self.retrieved_gps_list[i][0], # latitude
+                                                                          self.retrieved_gps_list[i][1], # longitude
                                                                           self.gt_scale_list[i]))
 
     def get_estimated_gps(self):

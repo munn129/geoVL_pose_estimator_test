@@ -1,6 +1,6 @@
 from geotag_image import GeoTagImage
 from geo_error import GeoError
-from image_retrieved import ImageRetrieved
+from retrieved_image import RetrievedImage
 from relative_pose import RelativePose
 
 root_dir = 'patchnetvlad_workspace'
@@ -9,10 +9,6 @@ db_dir = '1024_1m'
 query_gps = 'query_gps.txt'
 db_gps = 'db_gps.txt'
 retrieval_num = 2
-
-# txt 파일을 읽어서, 이미지 리스트를 받아오는 함수 혹은 클래스 필요
-# 혹은 GeoTagImage 클래스를 상속받아서,
-# 텍스트 파일(image retrieval 결과)의 경로만 주면 알아서 하는 클래스
 
 # 일단, 그 기능을 하는 함수
 img_retrieval_result_dir = 'img_retrieval_result.txt'
@@ -45,22 +41,30 @@ dataset_list = []
 for i in dataset_name_list:
     dataset_list.append(GeoTagImage(str(i), db_gps))
 
+# 쿼리 이미지와 image retrieval 결과를 저장
+# 쿼리 이미지 - [retrieved images, ...] 로 구성되어 있음
 retrieved_list = []
 for i in range(len(query_list)):
     tmp_dataset_list = []
     for j in range(retrieval_num):
-        tmp_dataset_list.append(dataset_list[i * 2 + j])
+        tmp_dataset_list.append(dataset_list[i * retrieval_num + j])
 
-    retrieved_list.append(ImageRetrieved(query_list[i], tmp_dataset_list))
+    retrieved_list.append(RetrievedImage(query_list[i], tmp_dataset_list))
 
+# RelativePose 클래스에서 추정된 위치(gps)를 가져옴
+# RelativePose에서 연산하는 것 처럼 보이지만,
+# 실제로는 PoseEstimation 클래스에서 연산이 이뤄지고 있음
+# RelativePose는 관계된 값만 저장함
 estimated_gps_list = []
 for retrieved in retrieved_list:
     estimated_gps_list.append(RelativePose(retrieved).get_estimated_gps())
 
+# 쿼리 이미지가 촬영된 위치를 저장
 gt_gps_list = []
 for query in query_list:
     gt_gps_list.append((query.get_latitude(), query.get_longitude()))
 
+# retrieved 이미지가 촬영된 위치를 저장
 dataset_gps_list = []
 for i in range(len(query_list)):
     gps = dataset_list[2 * i].get_latitude(), dataset_list[2 * i].get_longitude()

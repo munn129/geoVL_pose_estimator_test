@@ -50,12 +50,8 @@ class RelativePose:
                                                                                    retrieved_list[0].get_longitude(),
                                                                                    retrieved_list[1].get_latitude(),
                                                                                    retrieved_list[1].get_longitude())
-        
-
-    def direct_estimate(self):
-        pass
     
-    def get_estimated_gps(self):
+    def direct_estimate(self):
         # 이 배열의 길이는 retrieval image의 수
         # 나의 경우 쿼리 이미지 한 장에 retrieved image 2장을 골랐기 때문에 길이는 2
         estimated_gps = []
@@ -66,4 +62,9 @@ class RelativePose:
                                                                           self.retrieved_gps_list[i][0], # latitude
                                                                           self.retrieved_gps_list[i][1], # longitude
                                                                           self.gt_scale_list[i]))
+            
+        # retrieved top1 이미지의 결과
         return estimated_gps[0]
+    
+    def triangulation_estimate(self):
+        pass

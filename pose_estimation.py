@@ -117,4 +117,6 @@ class PoseEstimation:
         '''
         return sqrt((query_latitude - train_lattitude)**2 + (query_longitude - train_longitude)**2)
     
-    
+    def compute_angle_between_vectors(self, homogeneous_1, homogeneous_2):
+        vec_1 = homogeneous_1[:2,3]
+        vec_2 = homogeneous_2[:2,3]

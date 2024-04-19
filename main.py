@@ -58,7 +58,7 @@ for i in range(len(query_list)):
 # RelativePose는 관계된 값만 저장함
 estimated_gps_list = []
 for retrieved in retrieved_list:
-    estimated_gps_list.append(RelativePose(retrieved).get_estimated_gps())
+    estimated_gps_list.append(RelativePose(retrieved).direct_estimate())
 
 # 쿼리 이미지가 촬영된 위치를 저장
 gt_gps_list = []

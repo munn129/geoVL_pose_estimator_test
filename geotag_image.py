@@ -27,7 +27,7 @@ class GeoTagImage:
 
     def get_image(self):
         image = cv2.imread(self.image_path, cv2.IMREAD_GRAYSCALE)
-        if self.image is None: raise Exception("image is None")
+        if image is None: raise Exception("image is None")
         return image
     
     def get_latitude(self):

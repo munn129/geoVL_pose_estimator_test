@@ -66,13 +66,22 @@ for query in query_list:
     gt_gps_list.append((query.get_latitude(), query.get_longitude()))
 
 # retrieved 이미지가 촬영된 위치를 저장
-dataset_gps_list = []
+retrieval_result_list = []
 for i in range(len(query_list)):
     gps = dataset_list[2 * i].get_latitude(), dataset_list[2 * i].get_longitude()
-    dataset_gps_list.append(gps)
+    retrieval_result_list.append(gps)
+
+# new_gps
+# 원래는 위 코드랑 합칠 수 있음
+new_result_list = []
+for retrieved in retrieved_list:
+    new_result_list.append(RelativePose(retrieved).triangle_estimate())
 
 gps_error = GeoError(gt_gps_list, estimated_gps_list, 'gt', 'estimated')
 gps_error.error_printer()
 
-retrieved_error = GeoError(gt_gps_list, dataset_gps_list, 'gt', 'retrieved')
+retrieved_error = GeoError(gt_gps_list, retrieval_result_list, 'gt', 'retrieval')
 retrieved_error.error_printer()
+
+new_error = GeoError(gt_gps_list, new_result_list, 'gt', 'new')
+new_error.error_printer()

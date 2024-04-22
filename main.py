@@ -9,7 +9,7 @@ db_dir = '1024_1m'
 query_gps = 'query_gps.txt'
 db_gps = 'db_gps.txt'
 retrieval_num = 2
-scale = 10
+scale = 1
 
 # 일단, 그 기능을 하는 함수
 img_retrieval_result_dir = 'img_retrieval_result.txt'

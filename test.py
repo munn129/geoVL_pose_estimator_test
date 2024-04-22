@@ -33,12 +33,12 @@ def triangle_gps_estimate(alpha, beta, gamma, d):
 
 def main():
     d = 1000
-    vec_1 = [-0.5, -1]
-    vec_2 = [0.5, -1]
+    vec_1 = np.array([-0.5, -1])
+    vec_2 = np.array([0.5, -1])
 
     alpha = compute_angle_between_vectors(vec_1, vec_2)
 
-    vec_3 = [vec_1[0] - vec_2[0], vec_1[1] - vec_2[1]]
+    vec_3 = vec_1 - vec_2
     beta = compute_angle_between_vectors(vec_1, vec_3)
 
     gamma = pi - beta - alpha

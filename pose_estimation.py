@@ -119,7 +119,7 @@ class PoseEstimation:
         input
         homogeneous matrix
         ouput
-        1*2 vector
+        1*2 vector (np.array())
         '''
         # Homogeneous 행렬에서 translation부분의 x값과 y값만 가져와서 2*1 행렬로 만듦
         return np.array(homogeneous[:2,3]).T
@@ -139,14 +139,14 @@ class PoseEstimation:
         
         return theta
 
-    def triangle_angle(self, alpha, gamma):
+    def triangle_angle(self, alpha, beta):
         '''
         input
         alpha, gamma: rad
         output
         beta: rad
         '''
-        return pi - alpha - gamma
+        return pi - alpha - beta
     
     def triangle_gps_estimate(self, alpha, beta, gamma, d):
         '''
@@ -158,7 +158,7 @@ class PoseEstimation:
         x: latitude compensation
         y: longitude compenstaion
         '''
-        tmp = d / gamma * beta
-        x = tmp * cos(alpha)
-        y = tmp * sin(alpha)
+        tmp = gamma * d / alpha
+        x = tmp * cos(beta)
+        y = tmp * sin(beta)
         return x, y

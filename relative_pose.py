@@ -53,10 +53,6 @@ class RelativePose:
                                                                                    retrieved_list[1].get_latitude(),
                                                                                    retrieved_list[1].get_longitude())
     
-        # 쿼리 이미지가 촬영된 장소를 O = (0,0) 첫 번째 retrieved image의 촬영 장소를 A, 두번째를 B라 했을 때
-        # alpha -> OAB
-        # beta -> OBA
-        # gamma -> AOB
         # self.alpha = 0
         # self.beta = 0
         # self.gamma = 0
@@ -79,20 +75,18 @@ class RelativePose:
     
     def triangle_estimate(self):
         # 쿼리 이미지가 촬영된 장소를 O = (0,0) 첫 번째 retrieved image의 촬영 장소를 A, 두번째를 B라 했을 때
-        # alpha -> OAB
-        # beta -> OBA
-        # gamma -> AOB
+        # alpha -> AOB, beta -> OAB, gamma -> OBA
 
         if len(self.rt_list) != 2: raise Exception('length of rt_list must be 2 for this fuction')
 
         vec_1 = self.pose_estimation.homogeneous_to_2d_vector(self.rt_list[0])
         vec_2 = self.pose_estimation.homogeneous_to_2d_vector(self.rt_list[1])
-        gamma = self.pose_estimation.compute_angle_between_vectors(vec_1, vec_2)
+        alpha = self.pose_estimation.compute_angle_between_vectors(vec_1, vec_2)
 
-        vec_3 = [self.distance_retrieved_images, 0]
-        alpha = self.pose_estimation.compute_angle_between_vectors(vec_1, vec_3)
+        vec_3 = vec_1 - vec_2
+        beta = self.pose_estimation.compute_angle_between_vectors(vec_1, vec_3)
 
-        beta = self.pose_estimation.triangle_angle(alpha, gamma)
+        gamma = self.pose_estimation.triangle_angle(alpha, beta)
 
         x, y = self.pose_estimation.triangle_gps_estimate(alpha,
                                                           beta,
@@ -101,5 +95,7 @@ class RelativePose:
         
         estimated_latitude = self.retrieved_gps_list[0][0] + x
         estimated_longitude = self.retrieved_gps_list[0][1] + y
+
+        print(f'alpha: {alpha * 180 / 3.141592}, beta: {beta* 180 / 3.141592}, gamma: {gamma* 180 / 3.141592}')
 
         return estimated_latitude, estimated_longitude

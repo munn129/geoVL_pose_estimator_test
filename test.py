@@ -1,4 +1,4 @@
-from math import asin, pi, cos, sin
+from math import asin, pi, cos, sin, sqrt
 import numpy as np
 
 def compute_angle_between_vectors(vec_1, vec_2):
@@ -32,9 +32,9 @@ def triangle_gps_estimate(alpha, beta, gamma, d):
         return x, y
 
 def main():
-    d = 1000
-    vec_1 = np.array([-0.5, -1])
-    vec_2 = np.array([0.5, -1])
+    d = 1
+    vec_1 = np.array([0.5, -sqrt(3)/2])
+    vec_2 = np.array([1.5, -sqrt(3)/2])
 
     alpha = compute_angle_between_vectors(vec_1, vec_2)
 

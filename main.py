@@ -2,6 +2,7 @@ from geotag_image import GeoTagImage
 from geo_error import GeoError
 from retrieved_image import RetrievedImage
 from relative_pose import RelativePose
+from triangulation_pose import TriangulationPose
 
 root_dir = 'patchnetvlad_workspace'
 query_dir = '1114'
@@ -9,7 +10,7 @@ db_dir = '1024_1m'
 query_gps = 'query_gps.txt'
 db_gps = 'db_gps.txt'
 retrieval_num = 2
-scale = 1
+scale = 10
 
 # 일단, 그 기능을 하는 함수
 img_retrieval_result_dir = 'img_retrieval_result.txt'
@@ -58,7 +59,7 @@ for i in range(len(query_list)):
 # RelativePose는 관계된 값만 저장함
 estimated_gps_list = []
 for retrieved in retrieved_list:
-    estimated_gps_list.append(RelativePose(retrieved).direct_estimate())
+    estimated_gps_list.append(RelativePose(retrieved).get_direct_gps())
 
 # 쿼리 이미지가 촬영된 위치를 저장
 gt_gps_list = []
@@ -71,11 +72,11 @@ for i in range(len(query_list)):
     gps = dataset_list[2 * i].get_latitude(), dataset_list[2 * i].get_longitude()
     retrieval_result_list.append(gps)
 
-# new_gps
+# gps triangulation
 # 원래는 위 코드랑 합칠 수 있음
 new_result_list = []
 for retrieved in retrieved_list:
-    new_result_list.append(RelativePose(retrieved).triangle_estimate())
+    new_result_list.append(TriangulationPose(retrieved).get_triangulated_gps())
 
 gps_error = GeoError(gt_gps_list, estimated_gps_list, 'gt', 'estimated')
 gps_error.error_printer()
@@ -83,5 +84,5 @@ gps_error.error_printer()
 retrieved_error = GeoError(gt_gps_list, retrieval_result_list, 'gt', 'retrieval')
 retrieved_error.error_printer()
 
-new_error = GeoError(gt_gps_list, new_result_list, 'gt', 'new')
+new_error = GeoError(gt_gps_list, new_result_list, 'gt', 'triangulation')
 new_error.error_printer()

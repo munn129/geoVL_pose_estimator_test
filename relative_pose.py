@@ -43,20 +43,7 @@ class RelativePose:
         if not len(self.camera_to_world_list) == len(self.rt_list):
             raise Exception('calibration list and rt list have different length')
     
-        # proposal
-        # 이후 변수들은 제안하는 방법을 위한 변수들임
-        self.distance_retrieved_images = 0
-        retrieved_list = retrieved_image_instance.get_retrieved_image_list()
-        if len(retrieved_list) == 2:
-            self.distance_retrieved_images = self.pose_estimation.scale_calculator(retrieved_list[0].get_latitude(),
-                                                                                   retrieved_list[0].get_longitude(),
-                                                                                   retrieved_list[1].get_latitude(),
-                                                                                   retrieved_list[1].get_longitude())
-    
-        # self.alpha = 0
-        # self.beta = 0
-        # self.gamma = 0
-        # self.estimated_gps = 0,0
+        self.estimated_gps = 0,0
 
     def direct_estimate(self):
         # 이 배열의 길이는 retrieval image의 수
@@ -71,31 +58,9 @@ class RelativePose:
                                                                           self.gt_scale_list[i]))
             
         # retrieved top1 이미지의 결과 -> (latitude, longitude)
-        return estimated_gps[0]
+        self.estimated_gps = estimated_gps[0]
+
+    def get_direct_gps(self):
+        self.direct_estimate()
+        return self.estimated_gps
     
-    def triangle_estimate(self):
-        # 쿼리 이미지가 촬영된 장소를 O = (0,0) 첫 번째 retrieved image의 촬영 장소를 A, 두번째를 B라 했을 때
-        # alpha -> AOB, beta -> OAB, gamma -> OBA
-
-        if len(self.rt_list) != 2: raise Exception('length of rt_list must be 2 for this fuction')
-
-        vec_1 = self.pose_estimation.homogeneous_to_2d_vector(self.rt_list[0])
-        vec_2 = self.pose_estimation.homogeneous_to_2d_vector(self.rt_list[1])
-        alpha = self.pose_estimation.compute_angle_between_vectors(vec_1, vec_2)
-
-        vec_3 = vec_1 - vec_2
-        beta = self.pose_estimation.compute_angle_between_vectors(vec_1, vec_3)
-
-        gamma = self.pose_estimation.triangle_angle(alpha, beta)
-
-        x, y = self.pose_estimation.triangle_gps_estimate(alpha,
-                                                          beta,
-                                                          gamma,
-                                                          self.distance_retrieved_images)
-        
-        estimated_latitude = self.retrieved_gps_list[0][0] + x
-        estimated_longitude = self.retrieved_gps_list[0][1] + y
-
-        print(f'alpha: {alpha * 180 / 3.141592}, beta: {beta* 180 / 3.141592}, gamma: {gamma* 180 / 3.141592}')
-
-        return estimated_latitude, estimated_longitude

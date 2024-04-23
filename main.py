@@ -84,5 +84,5 @@ gps_error.error_printer()
 retrieved_error = GeoError(gt_gps_list, retrieval_result_list, 'gt', 'retrieval')
 retrieved_error.error_printer()
 
-new_error = GeoError(gt_gps_list, new_result_list, 'gt', 'triangulation')
-new_error.error_printer()
+triangulation_error = GeoError(gt_gps_list, new_result_list, 'gt', 'triangulation')
+triangulation_error.error_printer()

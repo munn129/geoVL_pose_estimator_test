@@ -3,15 +3,18 @@ Image와 GPS, Azimuth 값을 저장하는 클래스
 Image는 경로만 저장하며, get_image() 호출 시 이미지를 읽는다.
 '''
 
+import os
+
 import cv2
 
 class GeoTagImage:
-    def __init__(self, image_path: str, gps_path: str, scale = 1):
+    def __init__(self, image_path: str, gps_path: str, idx: int, scale = 1, image_path_prefix = ''):
         self.latitude = 0
         self.longitude = 0
         self.azimuth = 0
         self.image_path = image_path
         self.scale = scale
+        self.image_path_prefix = image_path_prefix
         
         # read gps
         with open(gps_path, 'r') as file:
@@ -24,10 +27,13 @@ class GeoTagImage:
                     self.azimuth = float(line[3])
                     break
         if self.latitude == 0 or self.longitude == 0 or self.azimuth == 0:
-            raise Exception("Wrong GPS or azimuth value")
+            raise Exception(f"Wrong GPS or azimuth value. idx: {idx}, image_path: {image_path}, gps_path: {gps_path}")
 
     def get_image(self):
-        image = cv2.imread(self.image_path, cv2.IMREAD_GRAYSCALE)
+        if self.image_path_prefix != '': image_path = os.path.join(self.image_path_prefix, self.image_path)
+        else: image_path = self.image_path
+        image = cv2.imread(image_path)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         if image is None: raise Exception("image is None")
 
         # image 스케일을 줄이기 위한 코드
@@ -35,7 +41,8 @@ class GeoTagImage:
         # 속도를 올리기 위해서는 이미지 사이즈를 줄여주는게 제일 효과적임
         if self.scale != 1:
             height, width = image.shape[:2]
-            return cv2.resize(image, (int(width/self.scale), int(height/self.scale)))
+            resized_image = cv2.resize(image, (int(width/self.scale), int(height/self.scale)))
+            return resized_image
         else:
             return image
     

@@ -12,7 +12,9 @@ db_dir = '0404_full'
 query_gps = '0404_full_gps.txt'
 db_gps = '1024_1m_gps.txt'
 retrieval_num = 10
-scale = 10
+scale = 2
+is_subset = False
+subset_num = 100
 
 # 일단, 그 기능을 하는 함수
 img_retrieval_result_dir = 'PatchNetVLAD_predictions.txt'
@@ -90,9 +92,9 @@ print('=====direct estimation result is saved=====')
 
 # gps triangulation
 # 원래는 위 코드랑 합칠 수 있음
-# new_result_list = []
-# for retrieved in retrieved_list:
-#     new_result_list.append(TriangulationPose(retrieved).get_triangulated_gps())
+new_result_list = []
+for retrieved in retrieved_list:
+    new_result_list.append(TriangulationPose(retrieved).get_triangulated_gps())
 
 retrieved_error = GeoError(gt_gps_list, retrieval_result_list, 'gt', 'retrieval')
 retrieved_error.error_printer()

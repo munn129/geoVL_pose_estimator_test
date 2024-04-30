@@ -3,6 +3,8 @@
 "저장하는 데이터는 없다"
 '''
 
+import os
+
 import numpy as np
 import cv2
 from math import cos, sin, pi, sqrt, asin
@@ -119,4 +121,36 @@ class PoseEstimation:
         scale: float
         '''
         return sqrt((query_latitude - train_lattitude)**2 + (query_longitude - train_longitude)**2)
-    
+
+# for test(debug)
+def main():
+    root_dir = '../../patchnetvlad_workspace/data'
+    query_dir = '0404_full'
+    query_img = '000005.png'
+    db_dir = '1024_1m'
+    db_img = '002305.png'
+    scale = 5
+
+    img1_dir = os.path.join(root_dir, query_dir, query_img)
+    img2_dir = os.path.join(root_dir, db_dir, db_img)
+
+    img1 = cv2.imread(img1_dir)
+    img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+    h, w = img1.shape[:2]
+    print(f'h: {h}, w: {w}')
+    img1_resized = cv2.resize(img1, (int(w/scale), int(h/scale)))
+
+    img2 = cv2.imread(img2_dir)
+    img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+    img2_resized = cv2.resize(img2, (int(w/scale), int(h/scale)))
+
+    pose_estimation = PoseEstimation()
+
+    rt_mat = pose_estimation.rt_calculator(img1_resized, img2_resized)
+    # rt_mat = rt_calculator(img1_resized, img2_resized)
+
+
+    print(rt_mat)
+
+if __name__ == '__main__':
+    main()

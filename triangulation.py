@@ -72,3 +72,27 @@ class Triangulation:
         x = tmp * cos(beta)
         y = tmp * sin(beta)
         return x, y
+    
+def main():
+    t = Triangulation()
+
+    d = 1
+    vec_1 = np.array([0.5, -sqrt(3)/2])
+    vec_2 = np.array([1.5, -sqrt(3)/2])
+
+    alpha = t.compute_angle_between_vectors(vec_1, vec_2)
+
+    vec_3 = vec_1 - vec_2
+    beta = t.compute_angle_between_vectors(vec_1, vec_3)
+
+    gamma = pi - beta - alpha
+
+    x, y = t.triangle_gps_estimate(alpha, beta, gamma, d)
+
+    print(x, y)
+    print(alpha * 180 / pi)
+    print(beta * 180 / pi)
+    print(gamma * 180 / pi)
+
+if __name__ == '__main__':
+    main()

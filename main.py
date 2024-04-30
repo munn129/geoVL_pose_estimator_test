@@ -43,6 +43,7 @@ for idx, val in enumerate(query_name_list):
 print('=====query list done=====')
 
 # (dataset) list<GeoTagImage>
+# 이 부분에서 시간이 너무 오래 걸림...
 dataset_list = []
 for idx, val in tqdm(enumerate(dataset_name_list)):
     dataset_list.append(GeoTagImage(str(val), db_gps, idx, scale, '../../'))

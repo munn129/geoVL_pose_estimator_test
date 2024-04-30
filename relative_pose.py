@@ -32,6 +32,7 @@ class RelativePose:
             self.camera_to_world_list.append(self.pose_estimation.camera_to_world_calibration(retrieved.get_azimuth()))
             self.rt_list.append(self.pose_estimation.rt_calculator(self.query.get_image(),
                                                                    retrieved.get_image(),
+                                                                   self.query.get_scale(),
                                                                    image_name))
             self.gt_scale_list.append(self.pose_estimation.scale_calculator(self.query.get_latitude(),
                                                                             self.query.get_longitude(),

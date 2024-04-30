@@ -9,6 +9,8 @@ import numpy as np
 import cv2
 from math import cos, sin, pi, sqrt, asin
 
+from camera_params import K, distortion_coefficients
+
 class PoseEstimation:
     def __init__(self):
         pass
@@ -50,7 +52,7 @@ class PoseEstimation:
 
         return calibration_matrix
 
-    def rt_calculator(self, query_image, retrieved_image, image_name = ''):
+    def rt_calculator(self, query_image, retrieved_image, scale, image_name = ''):
         '''
         input
         query_image: np.array

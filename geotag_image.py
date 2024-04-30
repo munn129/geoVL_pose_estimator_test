@@ -48,14 +48,17 @@ class GeoTagImage:
     
     # get_gps()로 위경도를 tuple로 반환할까 고민해봤지만,
     # 아무래도 호출에서 사용할 때 get_gps()[0] 보단 latitude라고 명시적으로 적혀 있는게 보기 좋을 것 같아서 분리함
-    def get_latitude(self):
+    def get_latitude(self) -> float:
         return self.latitude
     
-    def get_longitude(self):
+    def get_longitude(self) -> float:
         return self.longitude
     
-    def get_azimuth(self):
+    def get_azimuth(self) -> float:
         return self.azimuth
 
-    def get_image_path(self):
+    def get_image_path(self) -> str:
         return self.image_path
+    
+    def get_scale(self) -> int:
+        return self.scale

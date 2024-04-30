@@ -199,8 +199,11 @@ def rt_calculator(query_image, retrieved_image, scale, image_name = ''):
 
         d = distortion_coefficients
 
-        E, mask = cv2.findEssentialMat(query_points,train_points, K)
-        retval, rot, tran, mask = cv2.recoverPose(E,query_points,train_points, K)
+        # E, mask = cv2.findEssentialMat(query_points,train_points, K)
+        # retval, rot, tran, mask = cv2.recoverPose(E,query_points,train_points, K)
+
+        E, mask = cv2.findEssentialMat(query_points,train_points)
+        retval, rot, tran, mask = cv2.recoverPose(E,query_points,train_points)
 
 
         rt_matrix[:3, :3] = rot

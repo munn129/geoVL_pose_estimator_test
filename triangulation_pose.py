@@ -8,6 +8,7 @@
 from retrieved_image import RetrievedImage
 from triangulation import Triangulation
 from pose_estimation import PoseEstimation
+from geotag_image import GeoTagImage
 
 class TriangulationPose:
     def __init__(self, retrieved_image_instance: RetrievedImage) -> None:
@@ -62,11 +63,21 @@ class TriangulationPose:
         estimated_latitude = self.retrieved_gps_list[0][0] + x
         estimated_longitude = self.retrieved_gps_list[0][1] + y
 
-        # print(f'alpha: {alpha * 180 / 3.141592}, beta: {beta* 180 / 3.141592}, gamma: {gamma* 180 / 3.141592}')
+        print(f'alpha: {alpha * 180 / 3.141592}, beta: {beta* 180 / 3.141592}, gamma: {gamma* 180 / 3.141592}')
 
         self.estimated_latitude = estimated_latitude
         self.estimated_longitude = estimated_longitude
 
     def get_triangulated_gps(self) -> tuple:
-        self.triangle_estimate()
+        
+        # Essential matrix가 구해지지 않을 때 기본 값(t_vec = 0, 0, 0)으로 인해
+        # 사잇각 계산 중 오류 발생(zero division)
+        # 이 경우 retrieved image 위치 반환하도록
+        try:
+            self.triangle_estimate()
+        except Exception  as e:
+            print(f'{e}, return : {self.retrieved_gps_list[0]}')
+            return self.retrieved_gps_list[0]
+
+        print(f'triangulation: {self.estimated_latitude, self.estimated_longitude}')
         return self.estimated_latitude, self.estimated_longitude

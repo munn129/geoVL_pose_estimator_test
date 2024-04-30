@@ -103,6 +103,16 @@ def main():
     retrieved_error = GeoError(gt_gps_list, retrieval_result_list, 'gt', 'retrieval')
     retrieved_error.error_printer()
 
+
+    # gps triangulation
+    triangulation_result_list = []
+    for retrieved in retrieved_list:
+        triangulation_result_list.append(TriangulationPose(retrieved).get_triangulated_gps())
+
+    triangulation_error = GeoError(gt_gps_list, triangulation_result_list, 'gt', 'triangulation')
+    triangulation_error.error_printer()
+
+
     # RelativePose 클래스에서 추정된 위치(gps)를 가져옴
     # RelativePose에서 연산하는 것 처럼 보이지만,
     # 실제로는 PoseEstimation 클래스에서 연산이 이뤄지고 있음
@@ -113,17 +123,8 @@ def main():
         idx += 1
         direct_result_list.append(RelativePose(retrieved).get_direct_gps())
 
-    gps_error = GeoError(gt_gps_list, direct_result_list, 'gt', 'direct')
-    gps_error.error_printer()
-
-    # gps triangulation
-    # 원래는 위 코드랑 합칠 수 있음
-    triangulation_result_list = []
-    for retrieved in retrieved_list:
-        triangulation_result_list.append(TriangulationPose(retrieved).get_triangulated_gps())
-
-    triangulation_error = GeoError(gt_gps_list, triangulation_result_list, 'gt', 'triangulation')
-    triangulation_error.error_printer()
+    direct_error = GeoError(gt_gps_list, direct_result_list, 'gt', 'direct')
+    direct_error.error_printer()
 
 if __name__ == '__main__':
     main()

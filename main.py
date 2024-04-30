@@ -1,3 +1,5 @@
+import random
+
 from tqdm import tqdm
 
 from geotag_image import GeoTagImage
@@ -13,7 +15,7 @@ query_gps = '0404_full_gps.txt'
 db_gps = '1024_1m_gps.txt'
 retrieval_num = 10
 scale = 2
-is_subset = False
+is_subset = True
 subset_num = 100
 
 # 일단, 그 기능을 하는 함수
@@ -38,6 +40,25 @@ for i in _query_name_list:
     if i not in query_name_list:
         query_name_list.append(i)
 
+if is_subset:
+    subset_index = []
+    for _ in range(0, subset_num):
+        random_int = random.randint(0, len(query_name_list))
+        if random_int not in subset_index:
+            subset_index.append(random_int)
+
+    q_list = []
+    d_list = []
+    for i in subset_index:
+        q_list.append(query_name_list[i])
+        for j in range(0, retrieval_num):
+            d_list.append(dataset_name_list[i * retrieval_num + j])
+
+    query_name_list = []
+    query_name_list = q_list
+    dataset_name_list = []
+    dataset_name_list = d_list
+    
 # (query) list<GeoTagImage>
 query_list = []
 for idx, val in enumerate(query_name_list):

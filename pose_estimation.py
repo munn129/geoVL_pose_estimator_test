@@ -87,11 +87,15 @@ class PoseEstimation:
 
         rt_matrix = np.eye(4)
 
+        if scale != 1:
+            K[0,0] = K[0,0]/scale
+            K[1,1] = K[1,1]/scale
+
         # Essential matrix가 제대로 나오지 않는 경우 발생
         # 3*3 사이즈가 아니거나, 혹은 None이 되버리는 경우, 혹은 확인되지 않은 오류 발생
         try:
-            E, mask = cv2.findEssentialMat(query_points, train_points)
-            retval, rot, tran, mask = cv2.recoverPose(E, query_points, train_points)
+            E, mask = cv2.findEssentialMat(query_points, train_points, K, distortion_coefficients)
+            retval, rot, tran, mask = cv2.recoverPose(E, query_points, train_points, K, distortion_coefficients)
         except:
             # print(f'find Essential matrix is failed at {image_name}')
             return rt_matrix

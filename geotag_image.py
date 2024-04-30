@@ -54,3 +54,6 @@ class GeoTagImage:
     
     def get_azimuth(self):
         return self.azimuth
+
+    def get_image_path(self):
+        return self.image_path

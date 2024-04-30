@@ -19,8 +19,10 @@ class TriangulationPose:
         self.pose_estimation = PoseEstimation()
         
         for retrieved in self.retrieved_list:
+            image_name = f'query: {self.query.get_image_path()}, retrieved: {retrieved.get_image_path()}'
             self.rt_list.append(self.pose_estimation.rt_calculator(self.query.get_image(),
-                                                                   retrieved.get_image()))
+                                                                   retrieved.get_image(),
+                                                                   image_name))
             retrieved_latitude = retrieved.get_latitude()
             retrieved_longitude = retrieved.get_longitude()
             self.retrieved_gps_list.append((retrieved_latitude, retrieved_longitude))

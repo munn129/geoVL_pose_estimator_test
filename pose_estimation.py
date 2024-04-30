@@ -48,7 +48,7 @@ class PoseEstimation:
 
         return calibration_matrix
 
-    def rt_calculator(self, query_image, retrieved_image):
+    def rt_calculator(self, query_image, retrieved_image, image_name = ''):
         '''
         input
         query_image: np.array
@@ -81,7 +81,14 @@ class PoseEstimation:
         train_points = np.int32(train_points)
 
         E, mask = cv2.findEssentialMat(query_points, train_points)
-        retval, rot, tran, mask = cv2.recoverPose(E, query_points, train_points)
+
+        default_r_mat = np.array([1,0,0,0,1,0,0,0,1]).reshape((3,3))
+        default_t_mat = np.array([0,0,0]).reshape((3,1))
+        if E is None or not(E.shape[0] == 3 and E.shape[1] == 3):
+            rot = default_r_mat
+            tran = default_t_mat
+        else:
+            retval, rot, tran, mask = cv2.recoverPose(E, query_points, train_points)
         
         rt_matrix = np.eye(4)
 

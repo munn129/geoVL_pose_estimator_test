@@ -26,11 +26,13 @@ class RelativePose:
         # 가능하면 이 부분을 좀 분리하고 싶긴 함
         # 근데 또 내가 제안하는 방법에서 rt가 필요하기 때문에 init 함수에서 값을 처리하는게 맞는거 같기도...
         for retrieved in retrieved_image_instance.get_retrieved_image_list():
+            image_name = f'query: {self.query.get_image_path()}, retrieved: {retrieved.get_image_path()}'
             retrieved_latitude = retrieved.get_latitude()
             retrieved_longitude = retrieved.get_longitude()
             self.camera_to_world_list.append(self.pose_estimation.camera_to_world_calibration(retrieved.get_azimuth()))
             self.rt_list.append(self.pose_estimation.rt_calculator(self.query.get_image(),
-                                                                   retrieved.get_image()))
+                                                                   retrieved.get_image(),
+                                                                   image_name))
             self.gt_scale_list.append(self.pose_estimation.scale_calculator(self.query.get_latitude(),
                                                                             self.query.get_longitude(),
                                                                             retrieved_latitude,

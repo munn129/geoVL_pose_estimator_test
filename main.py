@@ -97,7 +97,8 @@ for i in tqdm(range(len(query_list)), desc = 'retrieval'):
     gps = dataset_list[retrieval_num * i].get_latitude(), dataset_list[retrieval_num * i].get_longitude()
     retrieval_result_list.append(gps)
 
-print('=====retrieval result is saved=====')
+retrieved_error = GeoError(gt_gps_list, retrieval_result_list, 'gt', 'retrieval')
+retrieved_error.error_printer()
 
 # RelativePose 클래스에서 추정된 위치(gps)를 가져옴
 # RelativePose에서 연산하는 것 처럼 보이지만,
@@ -109,19 +110,14 @@ for retrieved in tqdm(retrieved_list, desc = 'direct'):
     idx += 1
     estimated_gps_list.append(RelativePose(retrieved).get_direct_gps())
 
-print('=====direct estimation result is saved=====')
-
-# gps triangulation
-# 원래는 위 코드랑 합칠 수 있음
-new_result_list = []
-for retrieved in retrieved_list:
-    new_result_list.append(TriangulationPose(retrieved).get_triangulated_gps())
-
-retrieved_error = GeoError(gt_gps_list, retrieval_result_list, 'gt', 'retrieval')
-retrieved_error.error_printer()
-
 gps_error = GeoError(gt_gps_list, estimated_gps_list, 'gt', 'direct')
 gps_error.error_printer()
 
-# triangulation_error = GeoError(gt_gps_list, new_result_list, 'gt', 'triangulation')
-# triangulation_error.error_printer()
+# gps triangulation
+# 원래는 위 코드랑 합칠 수 있음
+triangulation_result_list = []
+for retrieved in retrieved_list:
+    triangulation_result_list.append(TriangulationPose(retrieved).get_triangulated_gps())
+
+triangulation_error = GeoError(gt_gps_list, triangulation_result_list, 'gt', 'triangulation')
+triangulation_error.error_printer()

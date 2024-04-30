@@ -11,7 +11,7 @@ gt 값(list)과 estimation 값(list)을 입력받아,
 from math import pi, sin, cos, sqrt, atan2
 
 class GeoError:
-    def __init__(self, gps_1_list: list, gps_2_list: list, opt1 = '', opt2 = ''):
+    def __init__(self, gps_1_list: list, gps_2_list: list, opt1 = '', opt2 = '', is_save = False):
         self.gps_1_list = gps_1_list
         self.gps_2_list = gps_2_list
         if len(self.gps_1_list) != len(self.gps_2_list):
@@ -23,6 +23,10 @@ class GeoError:
         self.opt2 = opt2
 
         self.error_list = []
+        self.is_save = is_save
+
+        for i in range(len(self.gps_1_list)):
+            self.error_list.append(self._gps_to_meter(self.gps_1_list[i], self.gps_2_list[i]))
 
     def _gps_to_meter(self, gps_1: tuple, gps_2: tuple) -> float:
         '''
@@ -45,16 +49,15 @@ class GeoError:
 
         return d * 1000 #meter
 
-    def _error_appender(self) -> None:
-        for i in range(len(self.gps_1_list)):
-            self.error_list.append(self._gps_to_meter(self.gps_1_list[i], self.gps_2_list[i]))
-    
     def error_printer(self) -> None:
-        self._error_appender()
 
-        print('================================================')
         if self.opt1 != '' and self.opt2 != '':
-            print(f'Error between {self.opt1} and {self.opt2}')
+            header = f'Error between {self.opt1} and {self.opt2}'
+            print(header)
+
+            if self.is_save:
+                with open(f'{self.opt1}_{self.opt2}.txt', 'w') as file:
+                    file.write(header + '\n') 
 
         error_sum = 0
         cnt = 0
@@ -64,6 +67,9 @@ class GeoError:
             # print(f'error: {error}[m]')
             error_sum += float(error)
             cnt += 1
+
+            if self.is_save:
+                with open(f'{self.opt1}_{self.opt2}.txt', 'a') as file:
+                    file.write(f'{gps_1} {gps_2} {error}\n')
         
-        print(f'average of error {error_sum/cnt}')
-        print('================================================')
+        print(f'average of error {error_sum/cnt} \n')

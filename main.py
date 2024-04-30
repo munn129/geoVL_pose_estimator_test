@@ -16,7 +16,7 @@ db_gps = '1024_1m_gps.txt'
 retrieval_num = 10
 scale = 2
 is_subset = True
-subset_num = 100
+subset_num = 50
 
 # 일단, 그 기능을 하는 함수
 img_retrieval_result_dir = 'PatchNetVLAD_predictions.txt'
@@ -104,13 +104,13 @@ retrieved_error.error_printer()
 # RelativePose에서 연산하는 것 처럼 보이지만,
 # 실제로는 PoseEstimation 클래스에서 연산이 이뤄지고 있음
 # RelativePose는 관계된 값만 저장함
-estimated_gps_list = []
+direct_result_list = []
 idx = 0
 for retrieved in tqdm(retrieved_list, desc = 'direct'):
     idx += 1
-    estimated_gps_list.append(RelativePose(retrieved).get_direct_gps())
+    direct_result_list.append(RelativePose(retrieved).get_direct_gps())
 
-gps_error = GeoError(gt_gps_list, estimated_gps_list, 'gt', 'direct')
+gps_error = GeoError(gt_gps_list, direct_result_list, 'gt', 'direct')
 gps_error.error_printer()
 
 # gps triangulation

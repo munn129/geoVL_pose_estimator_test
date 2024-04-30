@@ -1,5 +1,6 @@
-# ZHOU, Qunjie, et al. To learn or not to learn: Visual localization from essential matrices. In: 2020 IEEE International Conference on Robotics and Automation (ICRA). IEEE, 2020. p. 3319-3326.
+# ZHOU, Qunjie, et al. To learn or not to learn: Visual localization from essential matrices. 2020 ICRA
 
+# 보류
 from retrieved_image import RetrievedImage
 from triangulation import Triangulation
 from pose_estimation import PoseEstimation

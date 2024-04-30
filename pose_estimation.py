@@ -82,19 +82,17 @@ class PoseEstimation:
 
         E, mask = cv2.findEssentialMat(query_points, train_points)
 
-        default_r_mat = np.array([1,0,0,0,1,0,0,0,1]).reshape((3,3))
-        default_t_mat = np.array([0,0,0]).reshape((3,1))
-        if E is None or not(E.shape[0] == 3 and E.shape[1] == 3):
-            rot = default_r_mat
-            tran = default_t_mat
-        else:
-            retval, rot, tran, mask = cv2.recoverPose(E, query_points, train_points)
-        
         rt_matrix = np.eye(4)
+
+        # Essential matrix가 제대로 나오지 않는 경우 발생
+        # 3*3 사이즈가 아니거나, 혹은 None이 되버리는 경우, 혹은 확인되지 않은 오류 발생
+        try:
+            retval, rot, tran, mask = cv2.recoverPose(E, query_points, train_points)
+        except:
+            return rt_matrix
 
         rt_matrix[:3, :3] = rot
         rt_matrix[:3, 3] = tran.T
-        rt_matrix[3,3] = 1
 
         return rt_matrix
     

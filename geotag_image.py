@@ -35,6 +35,7 @@ class GeoTagImage:
         image = cv2.imread(image_path)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         if image is None: raise Exception("image is None")
+        if image.shape[0] == 0 or image.shape[1] == 0: raise Exception('image size is 0')
 
         # image 스케일을 줄이기 위한 코드
         # SIFT 과정 중 detectAndCompute()의 시간이 이미지의 사이즈에 따라 비례하기 때문.

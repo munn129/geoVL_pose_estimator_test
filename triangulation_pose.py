@@ -63,7 +63,7 @@ class TriangulationPose:
         estimated_latitude = self.retrieved_gps_list[0][0] + x
         estimated_longitude = self.retrieved_gps_list[0][1] + y
 
-        print(f'alpha: {alpha * 180 / 3.141592}, beta: {beta* 180 / 3.141592}, gamma: {gamma* 180 / 3.141592}')
+        # print(f'alpha: {alpha * 180 / 3.141592}, beta: {beta* 180 / 3.141592}, gamma: {gamma* 180 / 3.141592}')
 
         self.estimated_latitude = estimated_latitude
         self.estimated_longitude = estimated_longitude
@@ -79,5 +79,5 @@ class TriangulationPose:
             print(f'{e}, return : {self.retrieved_gps_list[0]}')
             return self.retrieved_gps_list[0]
 
-        print(f'triangulation: {self.estimated_latitude, self.estimated_longitude}')
+        # print(f'triangulation: {self.estimated_latitude, self.estimated_longitude}')
         return self.estimated_latitude, self.estimated_longitude

@@ -39,7 +39,8 @@ class GeoError:
         lat1, lon1 = gps_1
         lat2, lon2 = gps_2
 
-        R = 6378.137 # radius of the earth in KM
+        # 지구의 넓이 반지름
+        R = 6371.0072 # radius of the earth in KM
         lat_to_deg = lat2 * pi/180 - lat1 * pi/180
         long_to_deg = lon2 * pi/180 - lon1 * pi/180
 

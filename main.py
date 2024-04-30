@@ -7,6 +7,7 @@ from geo_error import GeoError
 from retrieved_image import RetrievedImage
 from relative_pose import RelativePose
 from triangulation_pose import TriangulationPose
+from colinear_pose import ColinearPose
 
 
 def main():
@@ -18,7 +19,7 @@ def main():
     retrieval_num = 10
     scale = 2
     is_subset = True
-    subset_num = 5
+    subset_num = 100
 
     # 일단, 그 기능을 하는 함수
     img_retrieval_result_dir = 'PatchNetVLAD_predictions.txt'
@@ -111,6 +112,14 @@ def main():
     triangulation_error = GeoError(gt_gps_list, triangulation_result_list, 'gt', 'triangulation')
     triangulation_error.error_printer()
 
+    # colinear
+    colinear_result_list = []
+    for retrieved in retrieved_list:
+        colinear_result_list.append(ColinearPose(retrieved).get_estimated_gps())
+
+    colinear_error = GeoError(gt_gps_list, colinear_result_list, 'gt', 'colinear')
+    colinear_error.error_printer()
+
     # RelativePose 클래스에서 추정된 위치(gps)를 가져옴
     # RelativePose에서 연산하는 것 처럼 보이지만,
     # 실제로는 PoseEstimation 클래스에서 연산이 이뤄지고 있음
@@ -123,6 +132,7 @@ def main():
 
     direct_error = GeoError(gt_gps_list, direct_result_list, 'gt', 'direct')
     direct_error.error_printer()
+
 
 if __name__ == '__main__':
     main()

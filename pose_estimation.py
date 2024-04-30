@@ -97,8 +97,8 @@ class PoseEstimation:
             E, mask = cv2.findEssentialMat(query_points, train_points, K)
             retval, rot, tran, mask = cv2.recoverPose(E, query_points, train_points, K)
         except Exception as e:
-            print(e)
-            print(f'find Essential matrix is failed at {image_name}')
+            # print(e)
+            # print(f'find Essential matrix is failed at {image_name}')
             return rt_matrix
 
         rt_matrix[:3, :3] = rot

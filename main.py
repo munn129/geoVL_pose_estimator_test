@@ -9,20 +9,23 @@ from relative_pose import RelativePose
 from triangulation_pose import TriangulationPose
 from colinear_pose import ColinearPose
 
+# 더 큰 간격에서 삼각측량
+# 넷블라드를 프리징하고 트랜스포머?로 파인튜닝(우리 데이터셋으로 재학습)
+# Zhou 방법에서 사용한 데이터 셋에서 평가하는 것도 방법임
 
 def main():
     root_dir = '../../patchnetvlad_workspace/data'
     query_dir = '1024_1m'
     db_dir = '0404_full'
     query_gps = '0404_full_gps.txt'
-    db_gps = '1024_1m_gps.txt'
+    db_gps = '1024_5m_gps.txt'
     retrieval_num = 10
     scale = 2
     is_subset = True
     subset_num = 100
 
     # 일단, 그 기능을 하는 함수
-    img_retrieval_result_dir = 'PatchNetVLAD_predictions.txt'
+    img_retrieval_result_dir = 'PatchNetVLAD_predictions_5m.txt'
     # 일단 result에 있는 대로 읽은 후에, 나중에 중복을 제거하기 위해 _query~~
     _query_name_list = []
     dataset_name_list = []
@@ -124,14 +127,14 @@ def main():
     # RelativePose에서 연산하는 것 처럼 보이지만,
     # 실제로는 PoseEstimation 클래스에서 연산이 이뤄지고 있음
     # RelativePose는 관계된 값만 저장함
-    direct_result_list = []
-    idx = 0
-    for retrieved in tqdm(retrieved_list, desc = 'direct'):
-        idx += 1
-        direct_result_list.append(RelativePose(retrieved).get_direct_gps())
+    # direct_result_list = []
+    # idx = 0
+    # for retrieved in tqdm(retrieved_list, desc = 'direct'):
+    #     idx += 1
+    #     direct_result_list.append(RelativePose(retrieved).get_direct_gps())
 
-    direct_error = GeoError(gt_gps_list, direct_result_list, 'gt', 'direct')
-    direct_error.error_printer()
+    # direct_error = GeoError(gt_gps_list, direct_result_list, 'gt', 'direct')
+    # direct_error.error_printer()
 
 
 if __name__ == '__main__':

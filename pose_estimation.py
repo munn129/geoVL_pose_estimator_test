@@ -94,10 +94,10 @@ class PoseEstimation:
         # Essential matrix가 제대로 나오지 않는 경우 발생
         # 3*3 사이즈가 아니거나, 혹은 None이 되버리는 경우, 혹은 확인되지 않은 오류 발생
         try:
-            E, mask = cv2.findEssentialMat(query_points, train_points, K, distortion_coefficients)
-            retval, rot, tran, mask = cv2.recoverPose(E, query_points, train_points, K, distortion_coefficients)
+            E, mask = cv2.findEssentialMat(query_points, train_points, K)
+            retval, rot, tran, mask = cv2.recoverPose(E, query_points, train_points, K)
         except:
-            # print(f'find Essential matrix is failed at {image_name}')
+            print(f'find Essential matrix is failed at {image_name}')
             return rt_matrix
 
         rt_matrix[:3, :3] = rot
@@ -135,7 +135,7 @@ def main():
     query_img = '000005.png'
     db_dir = '1024_1m'
     db_img = '002305.png'
-    scale = 5
+    scale = 1
 
     img1_dir = os.path.join(root_dir, query_dir, query_img)
     img2_dir = os.path.join(root_dir, db_dir, db_img)
@@ -152,11 +152,61 @@ def main():
 
     pose_estimation = PoseEstimation()
 
-    rt_mat = pose_estimation.rt_calculator(img1_resized, img2_resized)
-    # rt_mat = rt_calculator(img1_resized, img2_resized)
+    # rt_mat = pose_estimation.rt_calculator(img1_resized, img2_resized)
+    rt_mat = rt_calculator(img1_resized, img2_resized, scale)
 
 
     print(rt_mat)
+
+def rt_calculator(query_image, retrieved_image, scale, image_name = ''):
+        '''
+        input
+        query_image: np.array
+        retrieved_image: np.array
+        output
+        rt_matrix: 4*4 homogeneous np.array
+        '''
+        sift = cv2.SIFT_create()
+
+        query_kp, query_des = sift.detectAndCompute(query_image, None)
+        train_kp, train_des = sift.detectAndCompute(retrieved_image, None)
+
+        FLANN_INDEX_KDTREE = 1
+        index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
+        search_params = dict(checks = 50)
+
+        flann = cv2.FlannBasedMatcher(index_params, search_params)
+        matches = flann.knnMatch(query_des, train_des, k = 2)
+
+        query_points = []
+        train_points = []
+
+        for i, (m,n) in enumerate(matches):
+            if m.distance < 0.8 * n.distance:
+                # if m.distance is under 0.5, error occurs
+                query_points.append(query_kp[m.queryIdx].pt)
+                train_points.append(train_kp[m.trainIdx].pt)
+
+        query_points = np.int32(query_points)
+        train_points = np.int32(train_points)
+
+
+        rt_matrix = np.eye(4)
+
+        if scale != 1:
+            K[0,0] = K[0,0]/scale
+            K[1,1] = K[1,1]/scale
+
+        d = distortion_coefficients
+
+        E, mask = cv2.findEssentialMat(query_points,train_points, K)
+        retval, rot, tran, mask = cv2.recoverPose(E,query_points,train_points, K)
+
+
+        rt_matrix[:3, :3] = rot
+        rt_matrix[:3, 3] = tran.T
+
+        return rt_matrix
 
 if __name__ == '__main__':
     main()

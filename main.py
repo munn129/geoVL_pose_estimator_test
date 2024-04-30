@@ -18,7 +18,7 @@ def main():
     retrieval_num = 10
     scale = 2
     is_subset = True
-    subset_num = 50
+    subset_num = 5
 
     # 일단, 그 기능을 하는 함수
     img_retrieval_result_dir = 'PatchNetVLAD_predictions.txt'

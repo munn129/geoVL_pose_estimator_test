@@ -155,8 +155,6 @@ def main():
 
     # rt_mat = pose_estimation.rt_calculator(img1_resized, img2_resized)
     rt_mat = rt_calculator(img1_resized, img2_resized, scale)
-
-
     print(rt_mat)
 
 def rt_calculator(query_image, retrieved_image, scale, image_name = ''):

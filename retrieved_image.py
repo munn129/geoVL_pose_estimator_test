@@ -13,7 +13,7 @@ class RetrievedImage:
             raise Exception("All arguments must be GeoTagImage instance")
         
         self.query = query
-        self.retrieved_list = retrieved_list
+        self.retrieved_list = retrieved_list[:]
 
     def get_query(self) -> GeoTagImage:
         return self.query

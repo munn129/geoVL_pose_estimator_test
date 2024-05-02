@@ -18,11 +18,11 @@ def main():
     query_dir = '1024_1m'
     db_dir = '0404_full'
     query_gps = '0404_full_gps.txt'
-    db_gps = '1024_5m_gps.txt'
+    db_gps = '1024_1m_gps.txt'
     retrieval_num = 10
     scale = 2
     is_subset = True
-    subset_num = 100
+    subset_num = 10
 
     # 일단, 그 기능을 하는 함수
     img_retrieval_result_dir = 'PatchNetVLAD_predictions_5m.txt'
@@ -107,6 +107,19 @@ def main():
     retrieved_error = GeoError(gt_gps_list, retrieval_result_list, 'gt', 'retrieval')
     retrieved_error.error_printer()
 
+    # RelativePose 클래스에서 추정된 위치(gps)를 가져옴
+    # RelativePose에서 연산하는 것 처럼 보이지만,
+    # 실제로는 PoseEstimation 클래스에서 연산이 이뤄지고 있음
+    # RelativePose는 관계된 값만 저장함
+    direct_result_list = []
+    idx = 0
+    for retrieved in tqdm(retrieved_list, desc = 'direct'):
+        idx += 1
+        direct_result_list.append(RelativePose(retrieved).get_direct_gps())
+
+    direct_error = GeoError(gt_gps_list, direct_result_list, 'gt', 'direct')
+    direct_error.error_printer()
+
     # gps triangulation
     triangulation_result_list = []
     for retrieved in retrieved_list:
@@ -122,20 +135,6 @@ def main():
 
     colinear_error = GeoError(gt_gps_list, colinear_result_list, 'gt', 'colinear')
     colinear_error.error_printer()
-
-    # RelativePose 클래스에서 추정된 위치(gps)를 가져옴
-    # RelativePose에서 연산하는 것 처럼 보이지만,
-    # 실제로는 PoseEstimation 클래스에서 연산이 이뤄지고 있음
-    # RelativePose는 관계된 값만 저장함
-    # direct_result_list = []
-    # idx = 0
-    # for retrieved in tqdm(retrieved_list, desc = 'direct'):
-    #     idx += 1
-    #     direct_result_list.append(RelativePose(retrieved).get_direct_gps())
-
-    # direct_error = GeoError(gt_gps_list, direct_result_list, 'gt', 'direct')
-    # direct_error.error_printer()
-
 
 if __name__ == '__main__':
     main()

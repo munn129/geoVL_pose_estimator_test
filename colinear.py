@@ -22,7 +22,19 @@ class Colinear:
         average = np.mean(distance_list)
         inlier_mask = np.where(distance_list < average/2, 1, 0)[0]
 
-        return inlier_mask
+        th = 2
+        cnt = 0
+        tmp = np.zeros(len(inlier_mask))
+        for i, v in enumerate(inlier_mask):
+            if v == 1:
+                cnt += 1
+                tmp[i] = 1
+            
+            if cnt > th: break
+            
+
+        # print(tmp)
+        return tmp
     
     def gps_to_meter(self, gps_1: tuple, gps_2: tuple) -> float:
         '''
@@ -53,15 +65,16 @@ class Colinear:
         return True
 
     # avr
-    def gaussian_ml(self, inlier_mask, retrieved_list) -> tuple:
+    def gaussian_ml(self, inlier_mask, retrieved_list, query) -> tuple:
 
-        zero_cnt = 0
+        inlier_cnt = 0
         for i in inlier_mask:
-            if i: zero_cnt += 1
+            if i: inlier_cnt += 1
 
-        _weights = [ 2**i for i in range(zero_cnt - 1)]
-        _weights.append(100 - sum(_weights))
-        weights = _weights[::-1]
+        weights = [ 5**i for i in range(inlier_cnt - 1)]
+        weights.append(100 - sum(weights))
+        weights.sort(reverse=True)
+        # print(weights)
 
         lat_sum = 0
         lon_sum = 0
@@ -72,10 +85,15 @@ class Colinear:
                 lon_sum += retrieved.get_longitude() * (weights[cnt]/100)
                 cnt += 1
         
-        return lat_sum, lon_sum
+        # retrieved_1 = retrieved_list[0]
+        # print(self.gps_to_meter((lat_sum, lon_sum), (retrieved_1.get_latitude(), retrieved_1.get_longitude())))
 
+        return lat_sum, lon_sum
+    
 def main():
-    pass
+    num = 10
+    for i in range(num):
+        print(2**i)
 
 if __name__ == '__main__':
     main()

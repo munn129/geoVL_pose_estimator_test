@@ -13,7 +13,7 @@ class ColinearPose:
         
         self.is_colinear = Colinear().colinear_detection()
 
-        self.estimated_gps = Colinear().gaussian_ml(self.inlier_mask, self.retrieved_list)
+        self.estimated_gps = Colinear().gaussian_ml(self.inlier_mask, self.retrieved_list, self.query)
 
     def get_estimated_gps(self):
         return self.estimated_gps

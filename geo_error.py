@@ -50,7 +50,7 @@ class GeoError:
 
         return d * 1000 #meter
 
-    def error_printer(self) -> None:
+    def error_printer(self, q = 1) -> None:
 
         if self.opt1 != '' and self.opt2 != '':
             header = f'Error between {self.opt1} and {self.opt2}'
@@ -62,13 +62,13 @@ class GeoError:
 
         error_sum = 0
         cnt = 0
-        for gps_1, gps_2, error in zip(self.gps_1_list, self.gps_2_list, self.error_list):
 
-            error_sum += float(error)
+        for i in range(len(self.error_list)):
+            error_sum += float(self.error_list[i])
             cnt += 1
 
             if self.is_save:
                 with open(f'{self.opt1}_{self.opt2}.txt', 'a') as file:
-                    file.write(f'{gps_1} {gps_2} {error}\n')
+                    file.write(f'{self.gps_1_list[i]} {self.gps_2_list[i]} {self.error_list[i]}\n')
         
         print(f'average of error {error_sum/cnt} \n')

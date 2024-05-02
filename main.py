@@ -9,6 +9,9 @@ from relative_pose import RelativePose
 from triangulation_pose import TriangulationPose
 from colinear_pose import ColinearPose
 
+from retrieval_distribution import RetrievalDistribution
+from error_plot import ErrorPlot
+
 # 더 큰 간격에서 삼각측량
 # 넷블라드를 프리징하고 트랜스포머?로 파인튜닝(우리 데이터셋으로 재학습)
 # Zhou 방법에서 사용한 데이터 셋에서 평가하는 것도 방법임
@@ -22,7 +25,7 @@ def main():
     retrieval_num = 10
     scale = 2
     is_subset = False
-    subset_num = 10
+    subset_num = 100
 
     # 일단, 그 기능을 하는 함수
     img_retrieval_result_dir = 'PatchNetVLAD_predictions_1m.txt'
@@ -104,8 +107,26 @@ def main():
         gps = dataset_list[retrieval_num * i].get_latitude(), dataset_list[retrieval_num * i].get_longitude()
         retrieval_result_list.append(gps)
 
-    retrieved_error = GeoError(gt_gps_list, retrieval_result_list, 'gt', 'retrieval')
+    retrieved_error = GeoError(gt_gps_list, retrieval_result_list, 'gt', 'retrieval', is_save=True)
     retrieved_error.error_printer()
+
+    for i in retrieved_list:
+        t = i.eval()
+        if t[0] > 10:
+            print(t)
+            print(i.get_query().get_image_path())
+            print(i.get_retrieved_image_list()[0].get_image_path())
+            print('=================================')
+            
+
+    # retrieval 결과의 유형을 보기 위함
+    # distribution_list = []
+    # top = 3
+    # for i in retrieved_list:
+    #     distribution_list.append(RetrievalDistribution(i, top))
+    
+    # plot_instance = ErrorPlot(distribution_list, False)
+    # plot_instance.plot()
 
     # RelativePose 클래스에서 추정된 위치(gps)를 가져옴
     # RelativePose에서 연산하는 것 처럼 보이지만,

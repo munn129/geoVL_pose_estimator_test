@@ -63,3 +63,7 @@ class GeoTagImage:
     
     def get_scale(self) -> int:
         return self.scale
+    
+    # 그냥 이렇게 만드는게 맞는거같음. 너무 불편함
+    def get_gps(self) -> tuple:
+        return self.latitude, self.longitude

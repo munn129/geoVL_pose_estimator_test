@@ -107,7 +107,7 @@ def main():
         gps = dataset_list[retrieval_num * i].get_latitude(), dataset_list[retrieval_num * i].get_longitude()
         retrieval_result_list.append(gps)
 
-    retrieved_error = GeoError(gt_gps_list, retrieval_result_list, 'gt', 'retrieval', is_save=True)
+    retrieved_error = GeoError(gt_gps_list, retrieval_result_list, 'gt', 'retrieval')
     retrieved_error.error_printer()
 
     for i in retrieved_list:

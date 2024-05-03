@@ -11,6 +11,7 @@ from colinear_pose import ColinearPose
 
 from retrieval_distribution import RetrievalDistribution
 from error_plot import ErrorPlot
+from markov_model import MarkovModel
 
 # 더 큰 간격에서 삼각측량
 # 넷블라드를 프리징하고 트랜스포머?로 파인튜닝(우리 데이터셋으로 재학습)
@@ -25,10 +26,13 @@ def main():
     retrieval_num = 10
     scale = 2
     is_subset = False
+    is_sequence_subset = 0
+    if is_subset and is_sequence_subset: raise Exception('only one condition must be True')
     subset_num = 100
 
+
     # 일단, 그 기능을 하는 함수
-    img_retrieval_result_dir = 'PatchNetVLAD_predictions_1m.txt'
+    img_retrieval_result_dir = 'PatchNetVLAD_predictions_1m_copy.txt'
     # 일단 result에 있는 대로 읽은 후에, 나중에 중복을 제거하기 위해 _query~~
     _query_name_list = []
     dataset_name_list = []
@@ -67,6 +71,18 @@ def main():
         query_name_list = q_list
         dataset_name_list = []
         dataset_name_list = d_list
+
+    if is_sequence_subset:
+        q_list = []
+        d_list = []
+        
+        for i in range(subset_num):
+            q_list.append(query_name_list[i])
+            for j in range(retrieval_num):
+                d_list.append(dataset_name_list[i*retrieval_num + j])
+
+        query_name_list = q_list[:]
+        dataset_name_list = d_list[:]
         
     # (query) list<GeoTagImage>
     query_list = []
@@ -108,16 +124,29 @@ def main():
         retrieval_result_list.append(gps)
 
     retrieved_error = GeoError(gt_gps_list, retrieval_result_list, 'gt', 'retrieval')
-    retrieved_error.error_printer()
+    # retrieved_error.error_printer()
 
-    for i in retrieved_list:
-        t = i.eval()
-        if t[0] > 10:
-            print(t)
-            print(i.get_query().get_image_path())
-            print(i.get_retrieved_image_list()[0].get_image_path())
-            print('=================================')
-            
+    # for i in retrieved_list:
+    #     t = i.eval()
+    #     if t[0] > 10:
+    #         print(t)
+    #         print(i.get_query().get_image_path())
+    #         print(i.get_retrieved_image_list()[0].get_image_path())
+    #         print('=================================')
+
+    #markov
+
+    markov_model = MarkovModel(retrieved_list)
+    markov_gps_list = [i.get_gps() for i in markov_model.get_kf_geotag()]
+    # markov_gps_list = [i.get_gps() for i in markov_model.get_filtered_geotag()]
+
+    # for i in markov_model.get_filtered_geotag():
+    #     print(i.get_image_path())
+
+    markov_error = GeoError(gt_gps_list, markov_gps_list, 'gt', 'markov')
+    markov_error.error_printer()
+    
+    retrieved_error.error_printer()
 
     # retrieval 결과의 유형을 보기 위함
     # distribution_list = []

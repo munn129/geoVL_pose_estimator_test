@@ -15,6 +15,7 @@ class GeoTagImage:
         self.image_path = image_path
         self.scale = scale
         self.image_path_prefix = image_path_prefix
+        self.image_name = str(image_path).split('/')[-1]
         
         # read gps
         with open(gps_path, 'r') as file:
@@ -67,3 +68,9 @@ class GeoTagImage:
     # 그냥 이렇게 만드는게 맞는거같음. 너무 불편함
     def get_gps(self) -> tuple:
         return self.latitude, self.longitude
+    
+    def get_image_name(self) -> str:
+        return self.image_name
+    
+    def get_image_name_int(self) -> int:
+        return int(self.image_name[:-4])

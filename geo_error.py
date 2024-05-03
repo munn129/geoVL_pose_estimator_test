@@ -10,6 +10,7 @@ gt 값(list)과 estimation 값(list)을 입력받아,
 
 from math import pi, sin, cos, sqrt, atan2
 
+# 써보니까, 생성자가 입력을 받으면 안됨.
 class GeoError:
     def __init__(self, gps_1_list: list, gps_2_list: list, opt1 = '', opt2 = '', is_save = False):
         self.gps_1_list = gps_1_list
@@ -66,6 +67,8 @@ class GeoError:
         for i in range(len(self.error_list)):
             error_sum += float(self.error_list[i])
             cnt += 1
+
+            if self.error_list[i] > 500: print(f'500 ~ err: {self.error_list[i]}')
 
             if self.is_save:
                 with open(f'{self.opt1}_{self.opt2}.txt', 'a') as file:

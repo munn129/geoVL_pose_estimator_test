@@ -27,7 +27,7 @@ def main():
     retrieval_num = 10
     scale = 5
 
-    img_retrieval_result_dir = 'PatchNetVLAD_predictions_1m.txt'
+    img_retrieval_result_dir = 'NetVLAD_predictions_1m.txt'
     _query_name_list = []
     dataset_name_list = []
     with open(img_retrieval_result_dir, 'r') as file:

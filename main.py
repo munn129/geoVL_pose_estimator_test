@@ -24,7 +24,7 @@ def main():
     query_gps = '0404_full_gps.txt'
     db_gps = '1024_1m_gps.txt'
     retrieval_num = 10
-    scale = 2
+    scale = 5
     is_subset = False
     is_sequence_subset = 0
     if is_subset and is_sequence_subset: raise Exception('only one condition must be True')
@@ -32,7 +32,7 @@ def main():
 
 
     # 일단, 그 기능을 하는 함수
-    img_retrieval_result_dir = 'PatchNetVLAD_predictions_1m_copy.txt'
+    img_retrieval_result_dir = 'PatchNetVLAD_predictions_1m.txt'
     # 일단 result에 있는 대로 읽은 후에, 나중에 중복을 제거하기 위해 _query~~
     _query_name_list = []
     dataset_name_list = []
@@ -136,17 +136,17 @@ def main():
 
     #markov
 
-    markov_model = MarkovModel(retrieved_list)
-    markov_gps_list = [i.get_gps() for i in markov_model.get_kf_geotag()]
+    # markov_model = MarkovModel(retrieved_list)
+    # markov_gps_list = [i.get_gps() for i in markov_model.get_kf_geotag()]
     # markov_gps_list = [i.get_gps() for i in markov_model.get_filtered_geotag()]
 
     # for i in markov_model.get_filtered_geotag():
     #     print(i.get_image_path())
 
-    markov_error = GeoError(gt_gps_list, markov_gps_list, 'gt', 'markov')
-    markov_error.error_printer()
+    # markov_error = GeoError(gt_gps_list, markov_gps_list, 'gt', 'markov')
+    # markov_error.error_printer()
     
-    retrieved_error.error_printer()
+    # retrieved_error.error_printer()
 
     # retrieval 결과의 유형을 보기 위함
     distribution_list = []
@@ -175,7 +175,7 @@ def main():
     # for retrieved in retrieved_list:
     #     triangulation_result_list.append(TriangulationPose(retrieved).get_triangulated_gps())
 
-    # triangulation_error = GeoError(gt_gps_list, triangulation_result_list, 'gt', 'triangulation')
+    # triangulation_error = GeoError(gt_gps_list, triangulation_result_list, 'gt', 'triangulation', True)
     # triangulation_error.error_printer()
 
     # # colinear

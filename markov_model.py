@@ -144,6 +144,17 @@ class MarkovModel:
             else:
                 self.filtered_geotag.append(retrieved_list[0])
 
+    def gt_filter(self) -> None:
+        for i in range(1, len(self.result_list)):
+            retrieved_list = self.result_list[i].get_retrieved_image_list()
+            query = self.result_list[i].get_query()
+            
+            # 직전 top1부터 현재 모든 리트리벌 결과(10개)들 사이의 거리
+            distances = [self.gps_to_meter(query.get_gps(), i.get_gps()) for i in retrieved_list]
+            # print(distances)
+            min_idx = self.min_index(distances)            
+            self.filtered_geotag.append(retrieved_list[min_idx])
+
     def min_index(self, arr: list) -> int:
         idx = 0
         for i in range(len(arr)):
@@ -157,6 +168,10 @@ class MarkovModel:
     
     def get_kf_geotag(self) -> list:
         self.KF_index()
+        return self.filtered_geotag
+    
+    def get_gt_filter(self) -> list:
+        self.gt_filter()
         return self.filtered_geotag
 
 def main():

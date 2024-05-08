@@ -149,13 +149,13 @@ def main():
     retrieved_error.error_printer()
 
     # retrieval 결과의 유형을 보기 위함
-    # distribution_list = []
-    # top = 3
-    # for i in retrieved_list:
-    #     distribution_list.append(RetrievalDistribution(i, top))
+    distribution_list = []
+    top = 3
+    for i in retrieved_list:
+        distribution_list.append(RetrievalDistribution(i, top))
     
-    # plot_instance = ErrorPlot(distribution_list, False)
-    # plot_instance.plot()
+    plot_instance = ErrorPlot(distribution_list, False)
+    plot_instance.plot()
 
     # RelativePose 클래스에서 추정된 위치(gps)를 가져옴
     # RelativePose에서 연산하는 것 처럼 보이지만,

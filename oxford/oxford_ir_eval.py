@@ -26,8 +26,8 @@ def gps_to_meter(gps_1: tuple, gps_2: tuple) -> float:
 
 def main():
     result = 'PatchNetVLAD_predictions_oxford.txt'
-    q_gps = 'oxford_151110_gps.txt'
-    i_gps = 'oxford_151113_gps.txt'
+    q_gps = '151110gps.txt'
+    i_gps = '151113gps.txt'
 
     q_name_list = []
     i_name_list = []

@@ -1,7 +1,7 @@
 from oxford_ir_eval import gps_to_meter
 
 def main():
-    gps = 'oxford_151110_gps.txt'
+    gps = 'oxford_151113_gps.txt'
     gps_list = []
 
     with open(gps, 'r') as file:
